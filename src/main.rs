@@ -64,7 +64,7 @@ impl<'a, 'r> FromRequest<'a, 'r> for User {
 
 impl User {
     fn lookup_user_by_id(id: uuid::Uuid, app_state: State<AppState>) -> Option<User> {
-        match app_state.users.try_lock() {
+        match app_state.users.lock() {
             Ok(users) => match users.iter().find(|user| user.id == id) {
                 Some(user) => Some((*user).clone()),
                 None => None,
@@ -78,7 +78,7 @@ impl User {
         password: String,
         app_state: State<AppState>,
     ) -> Option<User> {
-        match app_state.users.try_lock() {
+        match app_state.users.lock() {
             Ok(users) => match users
                 .iter()
                 .find(|user| user.username == username && user.password == password)
@@ -143,7 +143,7 @@ fn register(
     // TODO: Guard against attempts to register existing usernames or emails with a RequestGuard
     let user_id = uuid::Uuid::new_v4();
     let error_msg = "An error occurred on our end while trying to sign you up. Please try again!";
-    match app_state.users.try_lock() {
+    match app_state.users.lock() {
         Ok(mut users) => {
             let new_user = User {
                 id: user_id,
