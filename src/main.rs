@@ -7,14 +7,20 @@ extern crate rocket_contrib;
 #[cfg(test)]
 mod tests;
 
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
+use std::convert;
+use std::sync::Mutex;
 
 use rocket::http::{Cookie, Cookies};
-use rocket::outcome::IntoOutcome;
 use rocket::request::{self, FlashMessage, Form, FromRequest, Request};
 use rocket::response::{Flash, Redirect};
+use rocket::{outcome::IntoOutcome, State};
 use rocket_contrib::templates::Template;
 use serde::Serialize;
+
+struct AppState {
+    users: Mutex<HashSet<User>>,
+}
 
 #[derive(FromForm)]
 struct Login {
@@ -31,37 +37,79 @@ struct Registration {
     password: String, // TODO: Reject weak passwords with https://github.com/magiclen/passwords or https://github.com/shssoichiro/zxcvbn-rs
 }
 
-#[derive(Debug, Serialize)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash, Serialize)]
 struct User {
     id: uuid::Uuid,
-    // email: String,
-    // preferred_name: String,
-    // password_digest: String,
+    username: String,
+    email: String,
+    preferred_name: String,
+    password: String, // TODO: Change to password digest and implement hashing
 }
 
 impl<'a, 'r> FromRequest<'a, 'r> for User {
     type Error = !;
 
     fn from_request(request: &'a Request<'r>) -> request::Outcome<User, !> {
+        let app_state = request.guard::<State<AppState>>().unwrap();
+
         request
             .cookies()
             .get_private("user_id")
             .and_then(|cookie| cookie.value().parse().ok())
-            .map(|id| User { id })
+            .map(|id| User::lookup_user_by_id(id, app_state))
+            .and_then(convert::identity) // This is the same as the experimental Option::flatten()
             .or_forward(())
     }
 }
 
+impl User {
+    fn lookup_user_by_id(id: uuid::Uuid, app_state: State<AppState>) -> Option<User> {
+        match app_state.users.try_lock() {
+            Ok(users) => match users.iter().find(|user| user.id == id) {
+                Some(user) => Some((*user).clone()),
+                None => None,
+            },
+            Err(_) => None,
+        }
+    }
+
+    fn lookup_user_by_credentials(
+        username: String,
+        password: String,
+        app_state: State<AppState>,
+    ) -> Option<User> {
+        match app_state.users.try_lock() {
+            Ok(users) => match users
+                .iter()
+                .find(|user| user.username == username && user.password == password)
+            {
+                Some(user) => Some((*user).clone()),
+                None => None,
+            },
+            Err(_) => None,
+        }
+    }
+}
+
 #[post("/login", data = "<login>")]
-fn login(mut cookies: Cookies, login: Form<Login>) -> Result<Redirect, Flash<Redirect>> {
-    if login.username == "chris" && login.password == "password" {
-        cookies.add_private(Cookie::new("user_id", uuid::Uuid::new_v4().to_string()));
-        Ok(Redirect::to(uri!(index)))
-    } else {
-        Err(Flash::error(
+fn login(
+    mut cookies: Cookies,
+    login: Form<Login>,
+    app_state: State<AppState>,
+) -> Result<Redirect, Flash<Redirect>> {
+    match User::lookup_user_by_credentials(
+        login.username.clone(),
+        login.password.clone(),
+        app_state,
+    ) {
+        Some(user) => {
+            cookies.add_private(Cookie::new("user_id", user.id.to_string()));
+            Ok(Redirect::to(uri!(index)))
+        }
+        None => Err(Flash::error(
             Redirect::to(uri!(login_page)),
             "Invalid username/password.",
-        ))
+        )),
     }
 }
 
@@ -90,8 +138,32 @@ fn login_page(flash: Option<FlashMessage>) -> Template {
 fn register(
     mut cookies: Cookies,
     registration: Form<Registration>,
+    app_state: State<AppState>,
 ) -> Result<Flash<Redirect>, Flash<Redirect>> {
-    cookies.add_private(Cookie::new("user_id", uuid::Uuid::new_v4().to_string()));
+    // TODO: Guard against attempts to register existing usernames or emails with a RequestGuard
+    let user_id = uuid::Uuid::new_v4();
+    let error_msg = "An error occurred on our end while trying to sign you up. Please try again!";
+    match app_state.users.try_lock() {
+        Ok(mut users) => {
+            let new_user = User {
+                id: user_id,
+                username: registration.username.clone(),
+                email: registration.email.clone(),
+                preferred_name: registration.preferred_name.clone(),
+                password: registration.password.clone(), // TODO: Implement password hashing here
+            };
+            if users.contains(&new_user) {
+                return Err(Flash::error(Redirect::to(uri!(register_page)), error_msg));
+            }
+            match users.insert(new_user) {
+                true => (),
+                false => return Err(Flash::error(Redirect::to(uri!(register_page)), error_msg)),
+            }
+        }
+
+        Err(_) => return Err(Flash::error(Redirect::to(uri!(register_page)), error_msg)),
+    }
+    cookies.add_private(Cookie::new("user_id", user_id.to_string()));
     Ok(Flash::success(
         Redirect::to(uri!(index)),
         format!("Successfully registered as {}", registration.username),
@@ -124,6 +196,10 @@ fn index() -> Redirect {
 }
 
 fn rocket() -> rocket::Rocket {
+    let state = AppState {
+        users: Mutex::new(HashSet::new()),
+    };
+
     rocket::ignite()
         .mount(
             "/",
@@ -139,6 +215,7 @@ fn rocket() -> rocket::Rocket {
                 user_index,
             ],
         )
+        .manage(state)
         .attach(Template::fairing())
 }
 
