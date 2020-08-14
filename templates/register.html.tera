@@ -19,7 +19,6 @@
          <input type="text" name="username" id="username" value="" />
          <label for="email">email</label>
          <input type="email" name="email" id="email" value="" />
-         <label for="email">email</label>
          <label for="preferred-name">preferred name</label>
          <input type="text" name="preferred-name" id="preferred-name" value="" />
          <label for="password">password</label>
