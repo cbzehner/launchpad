@@ -56,14 +56,14 @@ impl<'a, 'r> FromRequest<'a, 'r> for User {
             .cookies()
             .get_private("user_id")
             .and_then(|cookie| cookie.value().parse().ok())
-            .map(|id| User::lookup_user_by_id(id, app_state))
+            .map(|id| User::lookup_user_by_id(id, app_state.inner()))
             .and_then(convert::identity) // This is the same as the experimental Option::flatten()
             .or_forward(())
     }
 }
 
 impl User {
-    fn lookup_user_by_id(id: uuid::Uuid, app_state: State<AppState>) -> Option<User> {
+    fn lookup_user_by_id(id: uuid::Uuid, app_state: &AppState) -> Option<User> {
         match app_state.users.lock() {
             Ok(users) => match users.iter().find(|user| user.id == id) {
                 Some(user) => Some((*user).clone()),
