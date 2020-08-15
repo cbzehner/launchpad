@@ -120,13 +120,14 @@ fn logout(mut cookies: Cookies) -> Flash<Redirect> {
 }
 
 #[get("/login")]
-fn login_user(_user: User) -> Redirect {
+fn loggedin_user(_user: User) -> Redirect {
     Redirect::to(uri!(index))
 }
 
 #[get("/login", rank = 2)]
 fn login_page(flash: Option<FlashMessage>) -> Template {
     let mut context = HashMap::new();
+
     if let Some(ref msg) = flash {
         context.insert("flash", msg.msg());
     }
@@ -153,16 +154,30 @@ fn register(
                 password: registration.password.clone(), // TODO: Implement password hashing here
             };
             if users.contains(&new_user) {
-                return Err(Flash::error(Redirect::to(uri!(register_page)), error_msg));
+                return Err(Flash::error(
+                    Redirect::to(uri!(registration_page)),
+                    error_msg,
+                ));
             }
             match users.insert(new_user) {
                 true => (),
-                false => return Err(Flash::error(Redirect::to(uri!(register_page)), error_msg)),
+                false => {
+                    return Err(Flash::error(
+                        Redirect::to(uri!(registration_page)),
+                        error_msg,
+                    ))
+                }
             }
         }
 
-        Err(_) => return Err(Flash::error(Redirect::to(uri!(register_page)), error_msg)),
+        Err(_) => {
+            return Err(Flash::error(
+                Redirect::to(uri!(registration_page)),
+                error_msg,
+            ))
+        }
     }
+
     cookies.add_private(Cookie::new("user_id", user_id.to_string()));
     Ok(Flash::success(
         Redirect::to(uri!(index)),
@@ -171,12 +186,12 @@ fn register(
 }
 
 #[get("/register")]
-fn register_user(_user: User) -> Redirect {
+fn registered_user(_user: User) -> Redirect {
     Redirect::to(uri!(index))
 }
 
 #[get("/register", rank = 2)]
-fn register_page(flash: Option<FlashMessage>) -> Template {
+fn registration_page(flash: Option<FlashMessage>) -> Template {
     let mut context = HashMap::new();
     if let Some(ref msg) = flash {
         context.insert("flash", msg.msg());
@@ -205,13 +220,13 @@ fn rocket() -> rocket::Rocket {
             "/",
             routes![
                 index,
+                loggedin_user,
                 login,
                 login_page,
-                login_user,
                 logout,
                 register,
-                register_page,
-                register_user,
+                registered_user,
+                registration_page,
                 user_index,
             ],
         )
