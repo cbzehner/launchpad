@@ -5,6 +5,7 @@ authors = ["Chris Zehner <cbzehner@gmail.com>"]
 edition = "2018"
 
 [dependencies]
+scrypt = "0.4.0"
 
 [dependencies.rocket]
 version = "0.4.5"
