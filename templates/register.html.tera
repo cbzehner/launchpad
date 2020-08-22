@@ -11,7 +11,7 @@
      <p>Please fill out your information to signup.</p>
 
       {% if flash %}
-         <p>Error: {{ flash }}</p>
+         <p>{{ flash }}</p>
       {% endif %}
 
       <form action="/api/auth/register" method="post" accept-charset="utf-8">

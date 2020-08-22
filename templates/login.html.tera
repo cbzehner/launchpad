@@ -11,7 +11,7 @@
      <p>Please login to continue.</p>
 
       {% if flash %}
-         <p>Error: {{ flash }}</p>
+         <p>{{ flash }}</p>
       {% endif %}
 
       <form action="/api/auth/login" method="post" accept-charset="utf-8">
