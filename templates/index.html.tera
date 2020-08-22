@@ -8,7 +8,7 @@
    <body>
       <h1>Rocket Session Example</h1>
       <p>Logged in with user ID {{ id }}.</p>
-      <form action="/logout" method="post" accept-charset="utf-8">
+      <form action="/api/auth/logout" method="post" accept-charset="utf-8">
          <input type="submit" name="logout" id="logout" value="logout" />
       </form>
    </body>

@@ -17,7 +17,7 @@ fn user_id_cookie(response: &Response) -> Option<Cookie<'static>> {
 
 fn login(client: &Client, user: &str, pass: &str) -> Option<Cookie<'static>> {
     let response = client
-        .post("/login")
+        .post("/api/auth/login")
         .header(ContentType::Form)
         .body(format!(
             "username={username}&password={password}",
@@ -37,7 +37,7 @@ fn register(
     pass: &str,
 ) -> Option<Cookie<'static>> {
     let response = client
-        .post("/register")
+        .post("/api/auth/register")
         .header(ContentType::Form)
         .body(format!(
             "username={username}&email={email}&preferred-name={preferred_name}&password={password}",
@@ -111,7 +111,7 @@ fn logout_succeeds() {
     .expect("registered new user");
 
     let response = client
-        .post("/logout")
+        .post("/api/auth/logout")
         .cookie(registration_cookie)
         .dispatch();
     let cookie = user_id_cookie(&response).expect("logout cookie");
@@ -132,7 +132,7 @@ fn login_logout_succeeds() {
     )
     .expect("registered new user");
     client
-        .post("/logout")
+        .post("/api/auth/logout")
         .cookie(registration_cookie)
         .dispatch();
 
@@ -151,7 +151,10 @@ fn login_logout_succeeds() {
     assert_eq!(response.headers().get_one("Location"), Some("/"));
 
     // Logout.
-    let response = client.post("/logout").cookie(login_cookie).dispatch();
+    let response = client
+        .post("/api/auth/logout")
+        .cookie(login_cookie)
+        .dispatch();
     let cookie = user_id_cookie(&response).expect("logout cookie");
     assert!(cookie.value().is_empty());
 }

@@ -12,7 +12,7 @@ use crate::models::user::User;
 use crate::routes::auth;
 use crate::routes::basic;
 
-#[post("/login", data = "<login>")]
+#[post("/api/auth/login", data = "<login>")]
 pub fn login(
     mut cookies: Cookies,
     login: Form<Login>,
@@ -37,7 +37,7 @@ pub fn login(
     }
 }
 
-#[post("/logout")]
+#[post("/api/auth/logout")]
 pub fn logout(mut cookies: Cookies) -> Flash<Redirect> {
     cookies.remove_private(Cookie::named("user_id"));
     Flash::success(
@@ -46,7 +46,7 @@ pub fn logout(mut cookies: Cookies) -> Flash<Redirect> {
     )
 }
 
-#[post("/register", data = "<registration>")]
+#[post("/api/auth/register", data = "<registration>")]
 pub fn register(
     mut cookies: Cookies,
     registration: Form<Registration>,

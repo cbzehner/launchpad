@@ -14,7 +14,7 @@
          <p>Error: {{ flash }}</p>
       {% endif %}
 
-      <form action="/register" method="post" accept-charset="utf-8">
+      <form action="/api/auth/register" method="post" accept-charset="utf-8">
          <label for="username">username</label>
          <input type="text" name="username" id="username" value="" />
          <label for="email">email</label>
