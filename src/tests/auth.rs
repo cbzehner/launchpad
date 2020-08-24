@@ -4,11 +4,11 @@ use rocket::Response;
 
 use crate::server::rocket;
 
-fn user_id_cookie(response: &Response) -> Option<Cookie<'static>> {
+fn session_cookie(response: &Response) -> Option<Cookie<'static>> {
     let cookie = response
         .headers()
         .get("Set-Cookie")
-        .filter(|v| v.starts_with("user_id"))
+        .filter(|v| v.starts_with("session"))
         .nth(0)
         .and_then(|val| Cookie::parse_encoded(val).ok());
 
@@ -26,7 +26,7 @@ fn login(client: &Client, user: &str, pass: &str) -> Option<Cookie<'static>> {
         ))
         .dispatch();
 
-    user_id_cookie(&response)
+    session_cookie(&response)
 }
 
 fn register(
@@ -40,15 +40,12 @@ fn register(
         .post("/api/auth/register")
         .header(ContentType::Form)
         .body(format!(
-            "username={username}&email={email}&preferred-name={preferred_name}&password={password}",
-            username = user,
-            email = email,
-            preferred_name = name,
-            password = pass
+            "username={}&email={}&preferred-name={}&password={}",
+            user, email, name, pass
         ))
         .dispatch();
 
-    user_id_cookie(&response)
+    session_cookie(&response)
 }
 
 #[test]
@@ -114,7 +111,8 @@ fn logout_succeeds() {
         .post("/api/auth/logout")
         .cookie(registration_cookie)
         .dispatch();
-    let cookie = user_id_cookie(&response).expect("logout cookie");
+    let cookie = session_cookie(&response).expect("logout cookie");
+    dbg!(cookie.clone());
     assert!(cookie.value().is_empty());
 }
 
@@ -155,6 +153,6 @@ fn login_logout_succeeds() {
         .post("/api/auth/logout")
         .cookie(login_cookie)
         .dispatch();
-    let cookie = user_id_cookie(&response).expect("logout cookie");
+    let cookie = session_cookie(&response).expect("logout cookie");
     assert!(cookie.value().is_empty());
 }

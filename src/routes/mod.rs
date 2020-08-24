@@ -4,7 +4,7 @@ mod api;
 mod auth;
 mod basic;
 // mod template;
-// mod error;
+mod error;
 
 pub fn routes() -> Vec<Route> {
     routes![
@@ -22,5 +22,5 @@ pub fn routes() -> Vec<Route> {
 
 pub fn catchers() -> Vec<Catcher> {
     // catchers![error::not_found]
-    catchers![]
+    catchers![error::unauthorized]
 }

@@ -1,4 +1,4 @@
-use std::convert;
+use std::convert::{identity, TryFrom};
 
 use rocket::outcome::IntoOutcome;
 use rocket::request::FromRequest;
@@ -6,7 +6,8 @@ use rocket::request::{Outcome, Request};
 use rocket::State;
 use serde::Serialize;
 
-use crate::models::app::AppState;
+use super::session::Session;
+use crate::models::cache::Cache;
 use crate::models::registration::Registration;
 
 #[derive(Clone, Debug, PartialEq, Eq, Hash, Serialize)]
@@ -20,8 +21,8 @@ pub struct User {
 }
 
 impl User {
-    pub fn lookup_user_by_id(id: uuid::Uuid, app_state: &AppState) -> Option<User> {
-        match app_state.users.lock() {
+    pub fn lookup_user_by_id(id: uuid::Uuid, cache: &Cache) -> Option<User> {
+        match cache.users.lock() {
             Ok(users) => match users.iter().find(|user| user.id == id) {
                 Some(user) => Some((*user).clone()),
                 None => None,
@@ -30,11 +31,8 @@ impl User {
         }
     }
 
-    pub fn lookup_user_by_credentials(
-        username: String,
-        app_state: State<AppState>,
-    ) -> Option<User> {
-        match app_state.users.lock() {
+    pub fn lookup_user_by_credentials(username: String, cache: State<Cache>) -> Option<User> {
+        match cache.users.lock() {
             Ok(users) => match users.iter().find(|user| user.username == username) {
                 Some(user) => Some((*user).clone()),
                 None => None,
@@ -44,18 +42,20 @@ impl User {
     }
 }
 
+// TODO: Write a request guard for valid sessions. Otherwise redirect to the login screen.
+
 impl<'a, 'r> FromRequest<'a, 'r> for User {
     type Error = !;
 
     fn from_request(request: &'a Request<'r>) -> Outcome<User, !> {
-        let app_state = request.guard::<State<AppState>>().unwrap();
+        let cache = request.guard::<State<Cache>>().unwrap();
 
         request
             .cookies()
-            .get_private("user_id")
-            .and_then(|cookie| cookie.value().parse().ok())
-            .map(|id| User::lookup_user_by_id(id, app_state.inner()))
-            .and_then(convert::identity) // This is the same as the experimental Option::flatten()
+            .get_private("session")
+            .and_then(|cookie| Session::try_from(cookie).ok())
+            .map(|session| User::lookup_user_by_id(session.user_id, cache.inner()))
+            .and_then(identity) // This is the same as the experimental Option::flatten()
             .or_forward(())
     }
 }
