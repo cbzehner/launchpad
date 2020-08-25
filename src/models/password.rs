@@ -20,8 +20,8 @@ impl<'a> Password<'a> {
     }
 
     fn securely_hash(self, password: &str) -> String {
-        let params = ScryptParams::new(15, 8, 1).unwrap();
-        // TODO (post-rocket 0.5): Provide the ROCKET_SECRET as a salt to scrypt.
+        let params = ScryptParams::recommended();
+        // TODO (upgrade): post-release of rocket 0.5, provide the ROCKET_SECRET as a salt to scrypt.
         scrypt_simple(password, &params).expect("OS RNG should not fail")
     }
 
