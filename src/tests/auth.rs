@@ -96,6 +96,46 @@ fn registration_succeeds() {
 }
 
 #[test]
+fn duplicate_registration_security() {
+    let client = Client::new(rocket()).unwrap();
+    let registration_cookie = register(
+        &client,
+        "kjohnson",
+        "kjohnson@test.com",
+        "Katherine Johnson",
+        "password",
+    )
+    .expect("registered new user");
+
+    // Ensure we're logged in.
+    let mut response = client
+        .get("/")
+        .cookie(registration_cookie.clone())
+        .dispatch();
+    let body = response.body_string().unwrap();
+    assert_eq!(response.status(), Status::Ok);
+    assert!(body.contains("Logged in with user ID"));
+
+    let malicious_email_change_attempt = register(
+        &client,
+        "kjohnson",
+        "mallory@imposter.test.com",
+        "Katherine Johnson",
+        "password",
+    );
+    assert!(malicious_email_change_attempt.is_none());
+
+    let malicious_password_change_attempt = register(
+        &client,
+        "kjohnson",
+        "kjohnson@test.com",
+        "Katherine Johnson",
+        "youhavebeenpwned",
+    );
+    assert!(malicious_password_change_attempt.is_none());
+}
+
+#[test]
 fn logout_succeeds() {
     let client = Client::new(rocket()).unwrap();
     let registration_cookie = register(
@@ -112,7 +152,6 @@ fn logout_succeeds() {
         .cookie(registration_cookie)
         .dispatch();
     let cookie = session_cookie(&response).expect("logout cookie");
-    dbg!(cookie.clone());
     assert!(cookie.value().is_empty());
 }
 

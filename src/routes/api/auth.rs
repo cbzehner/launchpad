@@ -61,10 +61,16 @@ pub fn register(
             let new_user = User::try_from(&mut registration.into_inner());
             match new_user {
                 Ok(new_user) => {
-                    // TODO (fix): Every new_user has a unique id due to Uuid::new_v4() in the User::try_from.
-                    //      This allows multiple users to have the same username or email address.
-                    //      A potential solution would be to iterate through the user list checking for conflicts.
-                    if users.contains(&new_user) {
+                    // TODO (performance): Optimize this solution which detects attempts to register
+                    //      new users with usernames or passwords that conflict with existing users.
+                    if users
+                        .clone()
+                        .into_iter()
+                        .find(|user| {
+                            user.email == new_user.email || user.username == new_user.username
+                        })
+                        .is_some()
+                    {
                         return Err(Flash::error(
                             Redirect::to(uri!(auth::registration_page)),
                             error_msg,
