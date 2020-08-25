@@ -1,6 +1,6 @@
 use std::convert::TryFrom;
 
-use rocket::http::{Cookie, Cookies};
+use rocket::http::Cookies;
 use rocket::request::Form;
 use rocket::response::{Flash, Redirect};
 use rocket::State;
