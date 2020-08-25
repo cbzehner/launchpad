@@ -16,7 +16,7 @@ pub struct User {
     pub username: String,
     pub email: String,
     pub preferred_name: String,
-    // TODO: Remove this from the model and verification in the DB
+    // TODO (security): Remove this from the model and verification in the DB
     pub password_digest: String,
 }
 
@@ -42,7 +42,7 @@ impl User {
     }
 }
 
-// TODO: Write a request guard for valid sessions. Otherwise redirect to the login screen.
+// TODO (api ergonomics): Write a request guard for valid sessions. Otherwise redirect to the login screen.
 
 impl<'a, 'r> FromRequest<'a, 'r> for User {
     type Error = !;

@@ -60,7 +60,7 @@ impl std::convert::From<User> for Session {
             preferred_name: user.preferred_name,
             email: user.email,
             issued_at: Utc::now(),
-            expires_at: Utc::now() + Duration::weeks(1), // TODO: Better align this with Rocket's default Cookie expires setting.
+            expires_at: Utc::now() + Duration::weeks(1), // TODO (DRY): Better align this with Rocket's default Cookie expires setting.
         }
     }
 }

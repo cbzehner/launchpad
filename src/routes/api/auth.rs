@@ -53,7 +53,7 @@ pub fn register(
     registration: Form<Registration>,
     cache: State<Cache>,
 ) -> Result<Flash<Redirect>, Flash<Redirect>> {
-    // TODO: Guard against attempts to register existing usernames or emails with a RequestGuard
+    // TODO (api ergonomics): Guard against attempts to register existing usernames or emails with a RequestGuard
     let error_msg = "An error occurred on our end while trying to sign you up. Please try again!";
     let username = registration.username.clone();
     match cache.users.lock() {

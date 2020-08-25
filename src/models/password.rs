@@ -13,7 +13,7 @@ impl<'a> Password<'a> {
             return None;
         }
 
-        // TODO: Investigate whether there is a clever way to implement this.
+        // TODO (idiomatic): Investigate whether there is a clever way to implement this.
         // Allow a password to be read once-and-only-once by replacing it with an empty string.
         self.0 = "";
         Some(self.securely_hash(raw_password))
@@ -34,7 +34,7 @@ impl<'v> FromFormValue<'v> for Password<'v> {
     type Error = &'static str;
 
     fn from_form_value(v: &'v RawStr) -> Result<Self, Self::Error> {
-        // TODO: Validate password strength (see examples/form_validation)
+        // TODO (security): Validate password strength (see examples/form_validation)
         // Reject weak passwords with https://github.com/magiclen/passwords or https://github.com/shssoichiro/zxcvbn-rs
         Ok(Password(v.as_str()))
     }
