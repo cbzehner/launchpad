@@ -56,15 +56,17 @@ fn redirect_on_index() {
     assert_eq!(response.headers().get_one("Location"), Some("/login"));
 }
 
-#[test]
-fn can_login() {
-    let client = Client::new(rocket()).unwrap();
+// TODO: Consider whether this is testing anything that's not covered
+//       by other tests, such as login_logout_succeeds
+// #[test]
+// fn can_login() {
+//     let client = Client::new(rocket()).unwrap();
 
-    let mut response = client.get("/login").dispatch();
-    let body = response.body_string().unwrap();
-    assert_eq!(response.status(), Status::Ok);
-    assert!(body.contains("Please login to continue."));
-}
+//     let mut response = client.get("/login").dispatch();
+//     let body = response.body_string().unwrap();
+//     assert_eq!(response.status(), Status::Ok);
+//     assert!(body.contains("Please login to continue."));
+// }
 
 #[test]
 fn login_fails() {
