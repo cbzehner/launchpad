@@ -1,15 +1,19 @@
-<!DOCTYPE html>
-<html>
-   <head>
-      <meta charset="utf-8" />
-      <meta name="viewport" content="width=device-width" />
-      <title>Rocket: Session Example</title>
-   </head>
-   <body>
-      <h1>Rocket Session Example</h1>
-      <p>Logged in with user ID {{ id }}.</p>
-      <form action="/api/auth/logout" method="post" accept-charset="utf-8">
-         <input type="submit" name="logout" id="logout" value="logout" />
-      </form>
-   </body>
-</html>
+{% extends "base" %}
+
+{% block title %}Launchpad{% endblock title %}
+
+{% block content %}
+<h1>Session Example</h1>
+<h2 class="text-3xl">
+    Hello,
+    {% if name %}
+        {{name}}
+    {% else %}
+        World!
+    {% endif %}
+</h2>
+<p>Logged in with user ID {{ id }}.</p>
+<form action="/api/auth/logout" method="post" accept-charset="utf-8">
+   <input type="submit" name="logout" id="logout" value="logout" />
+</form>
+{% endblock content %}

@@ -31,11 +31,6 @@ impl<'a> Session {
         let json_cookie = serde_json::to_string(&self).unwrap();
         cookies.remove_private(Cookie::new("session", json_cookie));
     }
-
-    //     pub fn new_cookie(self) -> Cookie<'a> {
-    //         let json_cookie = serde_json::to_string(&self).unwrap();
-    //         Cookie::new("session", json_cookie)
-    //     }
 }
 
 /// Implement a [Request Guard](https://rocket.rs/v0.4/guide/requests/#request-guards) for loading the Session stored in the client-side cookies

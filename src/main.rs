@@ -6,6 +6,7 @@ extern crate rocket;
 mod models;
 mod routes;
 mod server;
+
 #[cfg(test)]
 mod tests;
 
