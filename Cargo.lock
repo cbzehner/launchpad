@@ -1075,9 +1075,9 @@ dependencies = [
 
 [[package]]
 name = "scrypt"
-version = "0.4.0"
+version = "0.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9d6ac09e31080f27e22c357205a8abee200c359d02cb888378a7c773a7a9165c"
+checksum = "3437654bbbe34054a268b3859fe41f871215069b39f0aef78808d85c37100696"
 dependencies = [
  "base64 0.12.3",
  "hmac 0.9.0",
