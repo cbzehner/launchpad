@@ -1,0 +1,10 @@
+{
+  "recommendations": [
+    "bradlc.vscode-tailwindcss",
+    "bungcip.better-toml",
+    "esbenp.prettier-vscode",
+    "karunamurti.tera",
+    "matklad.rust-analyzer",
+    "vadimcn.vscode-lldb"
+  ]
+}
