@@ -1,0 +1,16 @@
+[tasks.css-install]
+command = "yarn"
+args = ["install"]
+cwd = "./tailwind"
+
+[tasks.css-build-development]
+command = "yarn"
+args = [ "development" ]
+cwd = "./tailwind"
+dependencies = ["css-install"]
+
+[tasks.development]
+command = "cargo"
+args = [ "run" ]
+watch = { postpone = true, watch = ["./src/", "Rocket.toml", ".env", "./tailwind/"] }
+dependencies = ["css-build-development"]

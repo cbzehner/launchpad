@@ -1,32 +1,22 @@
 <!DOCTYPE html>
-<html lass="no-js" lang="en-US">
+<html lang="en-US">
   <head>
     <meta charset="utf-8" />
     <title>{% block title %}{% endblock title %}</title>
     <meta name="description" content="Batteries included Rust web toolkit" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <meta property="og:title" content="" />
+    {# <meta property="og:title" content="" />
     <meta property="og:type" content="" />
     <meta property="og:url" content="" />
-    <meta property="og:image" content="" />
+    <meta property="og:image" content="" /> #}
 
     <link rel="manifest" href="site.webmanifest" />
     <link rel="apple-touch-icon" href="icon.png" />
-    <!-- Place favicon.ico in the root directory -->
-
-    {# <link rel="stylesheet" href="css/normalize.css" /> #}
-    {# <link rel="stylesheet" href="css/main.css" /> #}
-    {# <link rel="stylesheet" href="css/style.css" /> #}
-    {# TODO (perf): Investigate using https://github.com/tailwindlabs/tailwindcss-playground to output only used styles #}
     {# TODO (correctness): Investigate applying https://www.freecodecamp.org/news/the-100-correct-way-to-do-css-breakpoints-88d6a5ba1862/ #}
-    <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+    <link href="public/css/tailwind.css" rel="stylesheet">
 
-    <meta name="theme-color" content="#fafafa" />
-
-    <script src="js/vendor/modernizr-3.11.2.min.js" async></script>
-    <script src="js/plugins.js" async></script>
-    <script src="js/main.js" async></script>
+    {# <meta name="theme-color" content="#fafafa" /> #}
   </head>
   <body style="height: 100vh;" class="flex flex-col justify-between">
     <header>

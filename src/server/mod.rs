@@ -2,6 +2,7 @@ use std::collections::{HashMap, HashSet};
 use std::sync::Mutex;
 
 use dotenv::dotenv;
+use rocket_contrib::serve::StaticFiles;
 use rocket_contrib::templates::Template;
 
 use crate::db;
@@ -23,5 +24,7 @@ pub fn rocket() -> rocket::Rocket {
         .attach(db::Conn::fairing())
         .manage(state)
         .mount("/", routes())
+        .mount("/", StaticFiles::from("public/root").rank(20))
+        .mount("/public/css", StaticFiles::from("public/css"))
         .register(catchers())
 }
