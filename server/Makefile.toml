@@ -1,0 +1,17 @@
+[tasks.build]
+command = "cargo"
+args = ["build"]
+
+[tasks.deploy]
+dependencies = ["build-release"]
+
+[tasks.serve]
+command = "cargo"
+args = ["run"]
+watch = { watch = [
+        "./Rocket.toml",
+        "./.env",
+        "./src/",
+        "../css/tailwind.css",
+        "../css/tailwind.config.js",
+    ] }

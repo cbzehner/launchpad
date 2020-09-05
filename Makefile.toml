@@ -1,33 +1,27 @@
-[tasks.tailwind-install]
-cwd = "./tailwind"
+[tasks.css-install]
+cwd = "./css"
 command = "yarn"
 args = ["install"]
+workspace = false
 
-[tasks.tailwind-development]
-cwd = "./tailwind"
+[tasks.css-build]
+cwd = "./css"
 command = "yarn"
 args = ["development"]
-dependencies = ["tailwind-install"]
+dependencies = ["css-install"]
+workspace = false
 
-[tasks.tailwind-production]
-cwd = "./tailwind"
+[tasks.css-release]
+cwd = "./css"
 command = "yarn"
 args = ["production"]
-dependencies = ["tailwind-install"]
-
-[tasks.rocket-development]
-command = "cargo"
-args = ["build"]
-
-[tasks.rocket-production]
-command = "cargo"
-args = ["build", "--release"]
+dependencies = ["css-install"]
+workspace = false
 
 [tasks.serve]
-command = "cargo"
-args = ["run"]
-watch = { watch = ["Rocket.toml", ".env", "./src/", "./tailwind/"] }
-dependencies = ["tailwind-development", "rocket-development"]
+run_task = "serve"
+dependencies = ["css-build"]
 
 [tasks.deploy]
-dependencies = ["tailwind-production", "rocket-production"]
+run_task = "serve"
+dependencies = ["css-release"]

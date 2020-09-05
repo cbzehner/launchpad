@@ -624,21 +624,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a91d884b6667cd606bb5a69aa0c99ba811a115fc68915e7056ec08a46e93199a"
 
 [[package]]
-name = "launchpad"
-version = "0.1.0"
-dependencies = [
- "chrono",
- "diesel",
- "dotenv",
- "rocket",
- "rocket_contrib",
- "scrypt",
- "serde",
- "serde_json",
- "uuid 0.6.5",
-]
-
-[[package]]
 name = "lazy_static"
 version = "1.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1294,6 +1279,21 @@ dependencies = [
  "itoa",
  "ryu",
  "serde",
+]
+
+[[package]]
+name = "server"
+version = "0.1.0"
+dependencies = [
+ "chrono",
+ "diesel",
+ "dotenv",
+ "rocket",
+ "rocket_contrib",
+ "scrypt",
+ "serde",
+ "serde_json",
+ "uuid 0.6.5",
 ]
 
 [[package]]

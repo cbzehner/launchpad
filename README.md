@@ -8,6 +8,12 @@ Launchpad provides a template for the basic functionality of web applications. S
 
 There's no magic. No hidden configurations. You have full control over your code from the moment you take over Mission Control.
 
+## Getting Started
+
+Clone this repository with `git clone git@github.com:cbzehner/launchpad.git` and remove the existing commit history with `cd launchpad && rm -rf .git/ && git init`.
+
+Build for local development by running `cargo make serve`.
+
 ## Who should use this
 
 This is currently pre-alpha software and isn't recommended for production use.
@@ -15,6 +21,8 @@ This is currently pre-alpha software and isn't recommended for production use.
 ## Technologies
 
 Launchpad is built with [Rocket 🚀](http://rocket.rs/) and stores data in [PostgreSQL](https://www.postgresql.org/) with a caching layer via [Redis](https://redis.io/).
+
+The front-end is rendered via [Tera templates](https://tera.netlify.app/) using [Tailwind](https://tailwindcss.com/) for styling.
 
 As the project evolves it will also include recommendations and preconfigured defaults for simple deployments and other standard infrastructure.
 
