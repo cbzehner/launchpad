@@ -37,3 +37,11 @@ Q: Where is the front-end? Can I only use this for developing APIs?
 A: While there is an eventual goal to provide seamless support for \<front-end-framework-of-choice>, the initial project focus is on providing well-configured defaults for a small number of technologies.
 
 SPAs are often unnecessary for projects that are starting out and thus the projects the author initially used Launchpad for are primarily server-side rendered using [Tera templates](https://tera.netlify.app/docs/) with only a small amount of Javascript.
+
+### Contributing
+
+TODO: Fill me in
+
+### Known Issues
+
+TODO: Fill me in
