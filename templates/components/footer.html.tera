@@ -1,0 +1,6 @@
+<footer class="container mx-auto flex flex-col items-center p-8">
+    {% block footer %}
+    <p>Launched with 🚀 by <a href="https://twitter.com/cbzehner" class="underline">@cbzehner</a></p>
+    {% endblock footer %}
+    {% include "components/debug" %}
+</footer>

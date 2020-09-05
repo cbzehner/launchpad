@@ -6,7 +6,7 @@ use crate::routes::auth;
 
 #[get("/")]
 pub fn user_index(user: User) -> Template {
-    Template::render("index", &user)
+    Template::render("pages/index", &user)
 }
 
 #[get("/", rank = 2)]

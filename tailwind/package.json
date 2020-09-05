@@ -4,6 +4,7 @@
     "production": "cross-env NODE_ENV=production postcss tailwind.css -o ../public/css/tailwind.css"
   },
   "dependencies": {
+    "@tailwindcss/typography": "^0.2.0",
     "autoprefixer": "^9.8.6",
     "tailwindcss": "^1.7.6"
   },

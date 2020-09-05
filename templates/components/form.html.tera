@@ -1,0 +1,10 @@
+<form id="...">
+    <div>
+        <label></label>
+        <input />
+    </div>
+    <div>
+        <button type="submit" form="..."></button>
+        <button type="reset"></button>
+    </div>
+</form>

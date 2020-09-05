@@ -19,7 +19,7 @@ pub fn login_page(flash: Option<FlashMessage>) -> Template {
         context.insert("flash", msg.msg());
     }
 
-    Template::render("login", &context)
+    Template::render("pages/login", &context)
 }
 
 #[get("/register")]
@@ -34,5 +34,5 @@ pub fn registration_page(flash: Option<FlashMessage>) -> Template {
         context.insert("flash", msg.msg());
     }
 
-    Template::render("register", &context)
+    Template::render("pages/register", &context)
 }
