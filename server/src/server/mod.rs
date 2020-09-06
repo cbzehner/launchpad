@@ -24,7 +24,7 @@ pub fn rocket() -> rocket::Rocket {
         .attach(db::Conn::fairing())
         .manage(state)
         .mount("/", routes())
-        .mount("/", StaticFiles::from("public/root").rank(20))
-        .mount("/public/css", StaticFiles::from("public/css"))
+        .mount("/", StaticFiles::from("../public/root").rank(20))
+        .mount("/public/css", StaticFiles::from("../public/css"))
         .register(catchers())
 }

@@ -1,10 +1,20 @@
-<form id="...">
-    <div>
-        <label></label>
-        <input />
-    </div>
-    <div>
-        <button type="submit" form="..."></button>
-        <button type="reset"></button>
-    </div>
-</form>
+<div class="w-full max-w-lg mb-4">
+    <form action={{ form.action }} method={{ form.method }} accept-charset="utf-8" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+        {% for row in form.rows %}
+            <div class="mb-5">
+                <label for={{ row.label | slugify }} class="block uppercase tracking-wide text-gray-700 text-sm font-bold mb-2">{{ row.label }}</label>
+                <input name={{ row.label | slugify }} placeholder={{ row.placeholder }} type={{ row.type }} class="shadow appearance-none border rounded w-full py-2 px-3 bg-gray-200 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"/>
+            </div>
+        {% endfor %}
+        {% if form.secondary_cta %}
+            <div class="flex flex-row-reverse items-center justify-between mb-4">
+                <button type="submit" class="btn btn-primary btn-blue">{{ form.primary_cta }}</button>
+                <button type="reset" class="btn btn-gray">{{ form.secondary_cta }}</button>
+            </div>
+        {% else %}
+            <div class="flex items-center justify-center mb-4">
+                <button type="submit" class="btn btn-primary btn-blue">{{ form.primary_cta }}</button>
+            </div>
+        {% endif %}
+    </form>
+</div>

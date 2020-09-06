@@ -4,3 +4,4 @@ mod password;
 pub(crate) mod registration;
 pub(crate) mod session;
 pub(crate) mod user;
+pub(crate) mod view_context;
