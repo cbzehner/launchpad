@@ -1,10 +1,8 @@
-use std::collections::HashMap;
-
 use rocket::{request::FlashMessage, response::Redirect};
 use rocket_contrib::templates::Template;
 
 use crate::models::user::User;
-use crate::models::view_context::{Form, FormRow, ViewContext};
+use crate::models::view_context::{Form, FormRow, Link, ViewContext};
 use crate::routes::basic;
 
 #[get("/login")]
@@ -22,10 +20,14 @@ pub fn login_page(flash: Option<FlashMessage>) -> Template {
     let context = ViewContext {
         flash,
         form: Some(Form {
-            primary_cta: "Sign In".into(),
-            secondary_cta: None,
             action: "/api/auth/login".into(),
             method: "post".into(),
+            submit_text: "Sign In".into(),
+            cancel_text: None,
+            secondary: Some(Link {
+                text: "Forgot Password?".into(),
+                url: "/reset_password".into(),
+            }),
             rows: vec![
                 FormRow {
                     label: "Username".into(),
@@ -39,7 +41,7 @@ pub fn login_page(flash: Option<FlashMessage>) -> Template {
                 },
             ],
         }),
-        debug: false,
+        ..ViewContext::default()
     };
 
     Template::render("pages/login", &context)
@@ -62,8 +64,9 @@ pub fn registration_page(flash: Option<FlashMessage>) -> Template {
         form: Some(Form {
             action: "/api/auth/register".into(),
             method: "post".into(),
-            secondary_cta: None,
-            primary_cta: "Register".into(),
+            submit_text: "Register".into(),
+            cancel_text: None,
+            secondary: None,
             rows: vec![
                 FormRow {
                     label: "Username".into(),
@@ -87,7 +90,7 @@ pub fn registration_page(flash: Option<FlashMessage>) -> Template {
                 },
             ],
         }),
-        debug: false,
+        ..ViewContext::default()
     };
 
     Template::render("pages/register", &context)

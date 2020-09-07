@@ -6,14 +6,19 @@
                 <input name={{ row.label | slugify }} placeholder={{ row.placeholder }} type={{ row.type }} class="shadow appearance-none border rounded w-full py-2 px-3 bg-gray-200 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"/>
             </div>
         {% endfor %}
-        {% if form.secondary_cta %}
+        {% if form.cancel_text %}
             <div class="flex flex-row-reverse items-center justify-between mb-4">
-                <button type="submit" class="btn btn-primary btn-blue">{{ form.primary_cta }}</button>
-                <button type="reset" class="btn btn-gray">{{ form.secondary_cta }}</button>
+                <button type="submit" class="btn btn-primary btn-blue">{{ form.submit_text }}</button>
+                <button type="reset" class="btn btn-gray">{{ form.cancel_text }}</button>
+            </div>
+        {% elif form.secondary %}
+            <div class="flex flex-row-reverse items-baseline justify-between mb-4">
+                <button type="submit" class="btn btn-primary btn-blue">{{ form.submit_text }}</button>
+                <a class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800" href={{ form.secondary.url }}>{{ form.secondary.text }}</a>
             </div>
         {% else %}
             <div class="flex items-center justify-center mb-4">
-                <button type="submit" class="btn btn-primary btn-blue">{{ form.primary_cta }}</button>
+                <button type="submit" class="btn btn-primary btn-blue">{{ form.submit_text }}</button>
             </div>
         {% endif %}
     </form>

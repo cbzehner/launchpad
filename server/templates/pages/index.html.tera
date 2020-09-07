@@ -6,13 +6,13 @@
 <h1>Session Example</h1>
 <h2 class="text-3xl">
     Hello,
-    {% if name %}
-        {{name}}
+    {% if user.name %}
+        {{ user.name }}
     {% else %}
         World!
     {% endif %}
 </h2>
-<p>Logged in with user ID {{ id }}.</p>
+<p>Logged in with user ID {{ user.id }}.</p>
 <form action="/api/auth/logout" method="post" accept-charset="utf-8">
    <input type="submit" name="logout" id="logout" value="logout" />
 </form>
