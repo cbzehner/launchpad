@@ -1,0 +1,22 @@
+<div class="hidden sm:flex sm:items-center sm:w-auto">
+    <div class="text-sm sm:flex-grow">
+        <a href="#responsive-header" class="block mt-4 sm:inline-block sm:mt-0 text-teal-200 hover:text-white mr-4">
+            Docs
+        </a>
+        <a href="#responsive-header" class="block mt-4 sm:inline-block sm:mt-0 text-teal-200 hover:text-white mr-4">
+            Examples
+        </a>
+        <a href="#responsive-header" class="block mt-4 sm:inline-block sm:mt-0 text-teal-200 hover:text-white">
+            Blog
+        </a>
+    </div>
+    <div>
+        {% if user %}
+            <form action="/api/auth/logout" method="post" accept-charset="utf-8" class="inline-block leading-none border rounded border-white hover:border-transparent hover:bg-white mt-4 sm:mt-0" >
+                <input type="submit" name="logout" value="Logout" class="inline mx-4 my-2 text-sm bg-teal-500 text-white hover:text-teal-500 hover:bg-white" />
+            </form>
+        {% else %}
+            <a href="/login" class="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white mt-4 sm:mt-0">Login</a>
+        {% endif %}
+    </div>
+</div>

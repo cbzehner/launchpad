@@ -2,7 +2,7 @@
 <html lang="en-US">
   <head>
     <meta charset="utf-8" />
-    <title>{% block title %}{% endblock title %}</title>
+    <title>{% block title %}Launchpad{% endblock title %}</title>
     <meta name="description" content="Batteries included Rust web toolkit" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 

@@ -1,7 +1,5 @@
 {% extends "base" %}
 
-{% block title %}Launchpad{% endblock title %}
-
 {% block content %}
 <h1>Session Example</h1>
 <h2 class="text-3xl">

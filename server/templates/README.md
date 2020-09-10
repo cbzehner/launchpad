@@ -20,4 +20,4 @@ TODO: Fill me in!
 
 ### Known Issues
 
-None.
+Aria support has not yet been implemented. This is a priority and will block Launchpad moving into a beta-release.

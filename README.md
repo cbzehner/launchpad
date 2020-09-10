@@ -38,9 +38,30 @@ A: While there is an eventual goal to provide seamless support for \<front-end-f
 
 SPAs are often unnecessary for projects that are starting out and thus the projects the author initially used Launchpad for are primarily server-side rendered using [Tera templates](https://tera.netlify.app/docs/) with only a small amount of Javascript.
 
+## Roadmap
+
+**Current Status:** Alpha
+
+While in Alpha status there are no guarantees about compatibility between versions or non-breaking changes. There won't be versioned releases and development will be continuous.
+
+What needs to be completed before Launchpad moves to a beta release?
+
+1. Complete the "forgot password" flow, including sending reset emails
+1. Fully integrate Postgres into the development process
+1. Integrate with at least one OAuth2 provider and verify table schema
+1. Provide Dockerfiles and `docker-compose` support
+1. Example CI/CD setup with GitHub Actions
+1. Example deployment workflow
+1. Fully documented public API
+1. Setup caching for backend operations via Redis
+1. Aria support
+1. A route accessible only to users with a specific role ("Admin")
+
 ### Contributing
 
-TODO: Fill me in
+All contributions are welcome! This code is meant for _you_ so feel free to suggest improvements or features! Not all features will be accepted, but the maintainers will strive to handle requests transparently.
+
+Please open a GitHub issue if you have questions or need to get in touch with the maintainers.
 
 ### Known Issues
 
