@@ -19,8 +19,8 @@ table! {
 table! {
     users (id) {
         id -> Uuid,
-        preferred_name -> Text,
         email -> Text,
+        preferred_name -> Text,
         created_at -> Timestamptz,
         updated_at -> Timestamptz,
     }
@@ -29,8 +29,4 @@ table! {
 joinable!(access -> access_types (access_type));
 joinable!(access -> users (user_id));
 
-allow_tables_to_appear_in_same_query!(
-    access,
-    access_types,
-    users,
-);
+allow_tables_to_appear_in_same_query!(access, access_types, users,);

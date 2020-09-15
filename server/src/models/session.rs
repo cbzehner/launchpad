@@ -69,10 +69,3 @@ impl<'a> std::convert::TryFrom<Cookie<'a>> for Session {
         Ok(session)
     }
 }
-
-/// A session cookie that's enabled when a user logs in with "Remember me?" checked.
-/// If they logout or their session expires, when they next visit the login page this
-/// will be used to pre-populate the email field of the login form.
-pub struct RememberMe {
-    pub user_email: String,
-}

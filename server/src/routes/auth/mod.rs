@@ -30,9 +30,9 @@ pub fn login_page(flash: Option<FlashMessage>) -> Template {
             }),
             rows: vec![
                 FormRow {
-                    label: "Username".into(),
+                    label: "Email".into(),
                     r#type: "text".into(),
-                    placeholder: "cbzehner".into(),
+                    placeholder: "cbzehner@gmail.com".into(),
                 },
                 FormRow {
                     label: "Password".into(),
@@ -69,19 +69,14 @@ pub fn registration_page(flash: Option<FlashMessage>) -> Template {
             secondary: None,
             rows: vec![
                 FormRow {
-                    label: "Username".into(),
+                    label: "Email".into(),
                     r#type: "text".into(),
-                    placeholder: "cbzehner".into(),
+                    placeholder: "cbzehner@gmail.com".into(),
                 },
                 FormRow {
                     label: "Preferred name".into(),
                     r#type: "text".into(),
                     placeholder: "Chris".into(),
-                },
-                FormRow {
-                    label: "Email".into(),
-                    r#type: "text".into(),
-                    placeholder: "cbzehner@gmail.com".into(),
                 },
                 FormRow {
                     label: "Password".into(),

@@ -13,7 +13,6 @@ use crate::models::registration::Registration;
 #[derive(Clone, Debug, PartialEq, Eq, Hash, Serialize)]
 pub struct User {
     pub id: uuid::Uuid,
-    pub username: String,
     pub email: String,
     pub preferred_name: String,
     // TODO (security): Remove this from the model and verification in the DB
@@ -31,9 +30,9 @@ impl User {
         }
     }
 
-    pub fn lookup_user_by_credentials(username: String, cache: State<Cache>) -> Option<User> {
+    pub fn lookup_user_by_credentials(email: String, cache: State<Cache>) -> Option<User> {
         match cache.users.lock() {
-            Ok(users) => match users.iter().find(|user| user.username == username) {
+            Ok(users) => match users.iter().find(|user| user.email == email) {
                 Some(user) => Some((*user).clone()),
                 None => None,
             },
@@ -69,7 +68,6 @@ impl std::convert::TryFrom<&mut Registration<'_>> for User {
                 let user_id = uuid::Uuid::new_v4();
                 Ok(User {
                     id: user_id,
-                    username: registration.username.clone(),
                     email: registration.email.clone(),
                     preferred_name: registration.preferred_name.clone(),
                     password_digest,

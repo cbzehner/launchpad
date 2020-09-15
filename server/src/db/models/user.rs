@@ -6,8 +6,8 @@ use crate::db::schema::users;
 #[derive(Debug, Queryable)]
 pub struct User<'a> {
     pub id: Uuid,
-    pub preferred_name: &'a str,
     pub email: &'a str,
+    pub preferred_name: &'a str,
     pub created_at: Timestamptz,
     pub updated_at: Timestamptz,
 }

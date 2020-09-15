@@ -19,8 +19,8 @@ pub fn login(
     login: Form<Login>,
     cache: State<Cache>,
 ) -> Result<Redirect, Flash<Redirect>> {
-    let error_msg = "Incorrect username or password";
-    match User::lookup_user_by_credentials(login.username.clone(), cache) {
+    let error_msg = "Incorrect email or password";
+    match User::lookup_user_by_credentials(login.email.clone(), cache) {
         Some(user) => match login.password.verify_digest(&user.password_digest) {
             Some(()) => {
                 Session::from(user).set_cookie(cookies);
@@ -53,22 +53,20 @@ pub fn register(
     registration: Form<Registration>,
     cache: State<Cache>,
 ) -> Result<Flash<Redirect>, Flash<Redirect>> {
-    // TODO (api ergonomics): Guard against attempts to register existing usernames or emails with a RequestGuard
+    // TODO (api ergonomics): Guard against attempts to register existing emails with a RequestGuard
     let error_msg = "An error occurred on our end while trying to sign you up. Please try again!";
-    let username = registration.username.clone();
+    let email = registration.email.clone();
     match cache.users.lock() {
         Ok(mut users) => {
             let new_user = User::try_from(&mut registration.into_inner());
             match new_user {
                 Ok(new_user) => {
                     // TODO (performance): Optimize this solution which detects attempts to register
-                    //      new users with usernames or passwords that conflict with existing users.
+                    //      new users with emails or passwords that conflict with existing users.
                     if users
                         .clone()
                         .into_iter()
-                        .find(|user| {
-                            user.email == new_user.email || user.username == new_user.username
-                        })
+                        .find(|user| user.email == new_user.email)
                         .is_some()
                     {
                         return Err(Flash::error(
@@ -105,6 +103,6 @@ pub fn register(
 
     Ok(Flash::success(
         Redirect::to(uri!(basic::index)),
-        format!("Successfully registered as {}", username),
+        format!("Successfully registered an account with {}", email),
     ))
 }

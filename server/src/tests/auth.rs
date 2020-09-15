@@ -15,33 +15,27 @@ fn session_cookie(response: &Response) -> Option<Cookie<'static>> {
     cookie.map(|c| c.into_owned())
 }
 
-fn login(client: &Client, user: &str, pass: &str) -> Option<Cookie<'static>> {
+fn login(client: &Client, email: &str, password: &str) -> Option<Cookie<'static>> {
     let response = client
         .post("/api/auth/login")
         .header(ContentType::Form)
         .body(format!(
-            "username={username}&password={password}",
-            username = user,
-            password = pass
+            "email={email}&password={password}",
+            email = email,
+            password = password
         ))
         .dispatch();
 
     session_cookie(&response)
 }
 
-fn register(
-    client: &Client,
-    user: &str,
-    email: &str,
-    name: &str,
-    pass: &str,
-) -> Option<Cookie<'static>> {
+fn register(client: &Client, email: &str, name: &str, password: &str) -> Option<Cookie<'static>> {
     let response = client
         .post("/api/auth/register")
         .header(ContentType::Form)
         .body(format!(
-            "username={}&email={}&preferred-name={}&password={}",
-            user, email, name, pass
+            "email={}&preferred-name={}&password={}",
+            email, name, password
         ))
         .dispatch();
 
