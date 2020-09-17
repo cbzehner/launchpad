@@ -21,7 +21,7 @@ pub fn rocket() -> rocket::Rocket {
     dotenv().ok();
     rocket::custom(config::from_env())
         .attach(Template::fairing())
-        .attach(db::Conn::fairing())
+        .attach(db::Postgres::fairing())
         .manage(state)
         .mount("/", routes())
         .mount("/", StaticFiles::from("../public/root").rank(20))

@@ -66,6 +66,7 @@ impl<'a> std::convert::TryFrom<Cookie<'a>> for Session {
 
     fn try_from(cookie: Cookie) -> Result<Self, Self::Error> {
         let session: Session = serde_json::from_str(cookie.value())?;
+        // TODO (security): Verify that the session isn't expired before allowing conversion.
         Ok(session)
     }
 }

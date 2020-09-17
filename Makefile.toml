@@ -25,3 +25,8 @@ dependencies = ["css-build"]
 [tasks.deploy]
 run_task = "serve"
 dependencies = ["css-release"]
+
+[tasks.sql]
+command = "psql"
+args = ["postgres://cbzehner:foobar@localhost:5432/launchpad"]
+workspace = false

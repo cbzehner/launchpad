@@ -1,7 +1,9 @@
-use rocket_contrib::databases::diesel::PgConnection;
+use rocket_contrib::databases::diesel;
 
-pub mod models;
-pub mod schema;
+pub(crate) mod password;
+pub(crate) mod schema;
+pub(crate) mod user;
+pub(crate) mod user_settings;
 
 #[database("postgres")]
-pub struct Conn(PgConnection);
+pub struct Postgres(diesel::PgConnection);

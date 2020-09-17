@@ -7,16 +7,13 @@ use rocket::State;
 use serde::Serialize;
 
 use super::session::Session;
-use crate::models::cache::Cache;
-use crate::models::registration::Registration;
+use crate::models::Cache;
 
 #[derive(Clone, Debug, PartialEq, Eq, Hash, Serialize)]
 pub struct User {
     pub id: uuid::Uuid,
     pub email: String,
     pub preferred_name: String,
-    // TODO (security): Remove this from the model and verification in the DB
-    pub password_digest: String,
 }
 
 impl User {
@@ -59,21 +56,11 @@ impl<'a, 'r> FromRequest<'a, 'r> for User {
     }
 }
 
-impl std::convert::TryFrom<&mut Registration<'_>> for User {
-    type Error = &'static str;
-
-    fn try_from(registration: &mut Registration) -> Result<Self, Self::Error> {
-        match registration.password.digest() {
-            Some(password_digest) => {
-                let user_id = uuid::Uuid::new_v4();
-                Ok(User {
-                    id: user_id,
-                    email: registration.email.clone(),
-                    preferred_name: registration.preferred_name.clone(),
-                    password_digest,
-                })
-            }
-            None => Err("Password from registration request has been consumed."),
-        }
-    }
-}
+// TODO (DRY): How to share user model building code between Registration and Login?
+// Maybe have a function that takes user_row and user_settings row and builds the User...
+// impl<'r> std::convert::TryFrom<models::Registration<'r>> for User {
+//     type Error = &'static str;
+//     fn try_from(registration: models::Registration) -> Result<Self, Self::Error> {
+//         ...how to access DB connection?
+//     }
+// }

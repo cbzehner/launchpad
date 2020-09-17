@@ -1,6 +1,6 @@
 use serde::Serialize;
 
-use crate::models::user::User;
+use crate::models::User;
 
 #[derive(Default, Serialize)]
 pub(crate) struct ViewContext {

@@ -2,6 +2,10 @@ use rocket::http::RawStr;
 use rocket::request::FromFormValue;
 use scrypt::{scrypt_check, scrypt_simple, ScryptParams};
 
+// TODO (security): A better design for this type would be
+// struct Password { password: String, mode: 'raw' | 'digest' }
+// and to immediately consume the value of password if any attempt to
+// access it is made while it's in 'raw' mode.
 #[derive(Copy, Clone)]
 pub struct Password<'v>(&'v str);
 
