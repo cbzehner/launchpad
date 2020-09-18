@@ -1,15 +1,13 @@
-use std::convert::{identity, TryFrom};
+use std::convert::TryFrom;
 
 use rocket::outcome::IntoOutcome;
 use rocket::request::FromRequest;
 use rocket::request::{Outcome, Request};
-use rocket::State;
-use serde::Serialize;
 
 use super::session::Session;
-use crate::models::Cache;
+use crate::db;
 
-#[derive(Clone, Debug, PartialEq, Eq, Hash, Serialize)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash, serde::Serialize, serde::Deserialize)]
 pub struct User {
     pub id: uuid::Uuid,
     pub email: String,
@@ -17,50 +15,35 @@ pub struct User {
 }
 
 impl User {
-    pub fn lookup_user_by_id(id: uuid::Uuid, cache: &Cache) -> Option<User> {
-        match cache.users.lock() {
-            Ok(users) => match users.iter().find(|user| user.id == id) {
-                Some(user) => Some((*user).clone()),
-                None => None,
-            },
-            Err(_) => None,
-        }
-    }
-
-    pub fn lookup_user_by_credentials(email: String, cache: State<Cache>) -> Option<User> {
-        match cache.users.lock() {
-            Ok(users) => match users.iter().find(|user| user.email == email) {
-                Some(user) => Some((*user).clone()),
-                None => None,
-            },
-            Err(_) => None,
+    pub fn from_db(
+        user: db::user::QueryableUser,
+        settings: db::user_settings::QueryableUserSettings,
+    ) -> Self {
+        User {
+            id: user.id,
+            email: user.email,
+            preferred_name: settings.preferred_name,
         }
     }
 }
 
+// Note: I'm actually reconsidering this TODO because this creates the need to create a blacklist or whitelist
+// of all currently active (or blacklisted) sessions. Right now I'm leaning towards the approach of "fat" sessions
+// that store most of the information in private cookies on the user's device and try to minimize the amount of trips
+// to the database ("chatty app" syndrome).
+// In the future it may make sense to store a bloom filter or more advanced data structure with just session ids that
+// can be used for server-side confirmation of the sessions, but I'm hoping to keep the database out of it.
 // TODO (api ergonomics): Write a request guard for valid sessions. Otherwise redirect to the login screen.
 
 impl<'a, 'r> FromRequest<'a, 'r> for User {
     type Error = !;
 
     fn from_request(request: &'a Request<'r>) -> Outcome<User, !> {
-        let cache = request.guard::<State<Cache>>().unwrap();
-
         request
             .cookies()
             .get_private("session")
             .and_then(|cookie| Session::try_from(cookie).ok())
-            .map(|session| User::lookup_user_by_id(session.user_id, cache.inner()))
-            .and_then(identity) // This is the same as the experimental Option::flatten()
+            .map(|session| session.user)
             .or_forward(())
     }
 }
-
-// TODO (DRY): How to share user model building code between Registration and Login?
-// Maybe have a function that takes user_row and user_settings row and builds the User...
-// impl<'r> std::convert::TryFrom<models::Registration<'r>> for User {
-//     type Error = &'static str;
-//     fn try_from(registration: models::Registration) -> Result<Self, Self::Error> {
-//         ...how to access DB connection?
-//     }
-// }

@@ -1,8 +1,10 @@
 use rocket::{request::FlashMessage, response::Redirect};
 use rocket_contrib::templates::Template;
 
-use crate::models::user::User;
-use crate::models::view_context::{Form, FormRow, Link, ViewContext};
+use crate::models::{
+    view_context::{Form, FormRow, Link, ViewContext},
+    User,
+};
 use crate::routes::basic;
 
 #[get("/login")]

@@ -1,10 +1,9 @@
 use rocket::http::Cookies;
 use rocket::request::Form;
 use rocket::response::{Flash, Redirect};
-use rocket::State;
 
 use crate::db::Postgres;
-use crate::models::{Cache, Login, Registration, Session};
+use crate::models::{Login, Registration, Session};
 use crate::routes::auth;
 use crate::routes::basic;
 
@@ -12,28 +11,20 @@ use crate::routes::basic;
 pub fn login(
     cookies: Cookies,
     login: Form<Login>,
-    cache: State<Cache>,
+    conn: Postgres,
 ) -> Result<Redirect, Flash<Redirect>> {
     let error_msg = "Incorrect email or password";
 
-    // TODO (performance): Both fetches in a single database query
-    // Fetch user from the database
-    // Fetch user's password digest from the database
-    // Compare the fetched password to the login password provided
-    // match login.password.verify_digest(&user.password_digest) {
-    //         Some(()) => {
-    //             Session::from(user).set_cookie(cookies);
-    //             Ok(Redirect::to(uri!(basic::index)))
-    //         }
-    //         None => Err(Flash::error(
-    //             Redirect::to(uri!(auth::login_page)),
-    //             error_msg,
-    //         )),
-    //     }
-    Err(Flash::error(
-        Redirect::to(uri!(auth::login_page)),
-        error_msg,
-    ))
+    match login.into_inner().retrieve_user(&conn) {
+        Ok(user) => {
+            Session::from(user).set_cookie(cookies);
+            Ok(Redirect::to(uri!(basic::index)))
+        }
+        Err(_) => Err(Flash::error(
+            Redirect::to(uri!(auth::login_page)),
+            error_msg,
+        )),
+    }
 }
 
 #[post("/api/auth/logout")]

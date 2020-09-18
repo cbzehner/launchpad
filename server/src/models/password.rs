@@ -29,8 +29,17 @@ impl<'a> Password<'a> {
         scrypt_simple(password, &params).expect("OS RNG should not fail")
     }
 
-    pub fn verify_digest(self, password_digest: &str) -> Option<()> {
-        scrypt_check(self.0, password_digest).ok()
+    pub fn verify_digest(self, password_digest: &str) -> Result<(), scrypt::errors::CheckError> {
+        scrypt_check(self.0, password_digest)
+    }
+
+    /// Run the work of a password check with no useful result. Useful for defeating timing attacks and masking
+    /// code paths that conditionally verify an inputted password. For example, the existing of a user account.
+    pub fn do_work() -> () {
+        // The unsalted digest for the string "password"
+        let password_digest = "$rscrypt$0$DwgB$3vlu3LvHen51BVlpCNx8AQ==$07sZhTtnMjqb3IZnTsRXu5lzgFxwyhroshffr+5ZSvE=$";
+        let _ = scrypt_check("notarealpassword", password_digest);
+        ()
     }
 }
 

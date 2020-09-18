@@ -3,20 +3,17 @@ use rocket::http::{Cookie, Cookies};
 use rocket::outcome::IntoOutcome;
 use rocket::request::FromRequest;
 use rocket::request::{Outcome, Request};
-use serde::{Deserialize, Serialize};
 
-use crate::models::user::User;
+use crate::models::User;
 use std::convert::TryFrom;
 
 /// A session cookie that stores common information about the user.  Prefer storing
 /// static, non-sensitive information in the session since it can be accessed by each
 /// request without additional load on the database.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
 pub struct Session {
     pub id: uuid::Uuid,
-    pub user_id: uuid::Uuid,
-    pub preferred_name: String,
-    pub email: String,
+    pub user: User,
     pub issued_at: DateTime<Utc>,
     pub expires_at: DateTime<Utc>,
 }
@@ -51,9 +48,7 @@ impl std::convert::From<User> for Session {
     fn from(user: User) -> Self {
         Session {
             id: uuid::Uuid::new_v4(),
-            user_id: user.id,
-            preferred_name: user.preferred_name,
-            email: user.email,
+            user,
             issued_at: Utc::now(),
             expires_at: Utc::now() + Duration::weeks(1), // TODO (DRY): Better align this with Rocket's default Cookie expires setting.
         }

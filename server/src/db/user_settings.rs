@@ -1,6 +1,6 @@
 use rocket_contrib::databases::diesel::prelude::*;
 
-use super::schema::user_settings;
+use super::schema::user_settings::{self, dsl};
 
 #[derive(Debug, Queryable)]
 pub struct QueryableUserSettings {
@@ -27,9 +27,18 @@ pub fn create(
 ) -> Result<QueryableUserSettings, diesel::result::Error> {
     let new_user_setting = InsertableUserSettings {
         user_id,
-        preferred_name: preferred_name,
+        preferred_name,
     };
     diesel::insert_into(user_settings::table)
         .values(new_user_setting)
         .get_result::<QueryableUserSettings>(conn)
+}
+
+pub fn from_user_id(
+    conn: &diesel::PgConnection,
+    user_id: uuid::Uuid,
+) -> Result<QueryableUserSettings, diesel::result::Error> {
+    dsl::user_settings
+        .filter(dsl::user_id.eq(user_id))
+        .first(conn)
 }

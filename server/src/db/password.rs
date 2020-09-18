@@ -1,6 +1,6 @@
 use rocket_contrib::databases::diesel::prelude::*;
 
-use super::schema::passwords;
+use super::schema::passwords::{self, dsl};
 use crate::models::Password;
 
 #[derive(Debug, Queryable)]
@@ -25,7 +25,7 @@ pub fn create(
     conn: &diesel::PgConnection,
     user_id: uuid::Uuid,
     password: &mut Password,
-) -> Result<QueryablePassword, diesel::result::Error> {
+) -> Result<usize, diesel::result::Error> {
     let password_digest = password
         .digest()
         .expect("Password from registration request has been consumed.");
@@ -37,5 +37,12 @@ pub fn create(
     };
     diesel::insert_into(passwords::table)
         .values(new_password)
-        .get_result::<QueryablePassword>(conn)
+        .execute(conn)
+}
+
+pub fn from_user_id(
+    conn: &diesel::PgConnection,
+    user_id: uuid::Uuid,
+) -> Result<QueryablePassword, diesel::result::Error> {
+    dsl::passwords.filter(dsl::user_id.eq(user_id)).first(conn)
 }

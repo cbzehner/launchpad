@@ -2,14 +2,14 @@ use crate::db;
 use crate::models::{Password, User};
 
 #[derive(FromForm)]
-pub struct Registration<'r> {
+pub struct Registration<'a> {
     pub email: String,
     #[form(field = "preferred-name")]
     pub preferred_name: String,
-    pub password: Password<'r>,
+    pub password: Password<'a>,
 }
 
-impl<'r> Registration<'r> {
+impl<'a> Registration<'a> {
     pub fn create_user(
         &mut self,
         conn: &diesel::PgConnection,
@@ -17,13 +17,9 @@ impl<'r> Registration<'r> {
         // TODO: Open a transaction
         let user_row = db::user::create(conn, &self.email)?;
         db::password::create(conn, user_row.id, &mut self.password)?;
-        let user_settings_row = db::user_settings::create(conn, user_row.id, &self.preferred_name)?;
+        let settings_row = db::user_settings::create(conn, user_row.id, &self.preferred_name)?;
         // TODO: Close the transaction
 
-        Ok(User {
-            id: user_row.id,
-            email: user_row.email,
-            preferred_name: user_settings_row.preferred_name,
-        })
+        Ok(User::from_db(user_row, settings_row))
     }
 }

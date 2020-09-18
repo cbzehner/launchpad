@@ -1,8 +1,7 @@
 use rocket::response::Redirect;
 use rocket_contrib::templates::Template;
 
-use crate::models::user::User;
-use crate::models::view_context::ViewContext;
+use crate::models::{view_context::ViewContext, User};
 use crate::routes::auth;
 
 #[get("/")]
