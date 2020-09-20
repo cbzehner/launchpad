@@ -10,7 +10,6 @@ table! {
         id -> Uuid,
         user_id -> Uuid,
         digest -> Text,
-        salt -> Text,
         created_at -> Timestamptz,
         updated_at -> Timestamptz,
     }

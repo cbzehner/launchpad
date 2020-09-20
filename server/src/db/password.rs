@@ -8,7 +8,6 @@ pub struct QueryablePassword {
     pub id: uuid::Uuid,
     pub user_id: uuid::Uuid,
     pub digest: String,
-    pub salt: String,
     pub created_at: chrono::DateTime<chrono::Utc>,
     pub updated_at: chrono::DateTime<chrono::Utc>,
 }
@@ -18,7 +17,6 @@ pub struct QueryablePassword {
 pub struct InsertablePassword<'a> {
     pub user_id: uuid::Uuid,
     pub digest: &'a str,
-    pub salt: &'a str,
 }
 
 pub fn create(
@@ -26,14 +24,10 @@ pub fn create(
     user_id: uuid::Uuid,
     password: &mut Password,
 ) -> Result<usize, diesel::result::Error> {
-    let password_digest = password
-        .digest()
-        .expect("Password from registration request has been consumed.");
+    let password_digest = password.digest();
     let new_password = InsertablePassword {
         user_id,
         digest: &password_digest,
-        // TODO (security): Use an actual salt
-        salt: "SALT",
     };
     diesel::insert_into(passwords::table)
         .values(new_password)

@@ -2,12 +2,12 @@ use crate::db;
 use crate::models::{Password, User};
 
 #[derive(FromForm)]
-pub struct Login<'a> {
+pub struct Login {
     pub email: String,
-    pub password: Password<'a>,
+    pub password: Password,
 }
 
-impl<'a> Login<'a> {
+impl Login {
     pub fn retrieve_user(
         &mut self,
         conn: &diesel::PgConnection,
