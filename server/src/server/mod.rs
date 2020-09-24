@@ -5,12 +5,12 @@ use rocket_contrib::templates::Template;
 use crate::db;
 use crate::routes::{catchers, routes};
 
-mod config;
+pub(crate) mod config;
 
 /// Build Rocket server.
 pub fn rocket() -> rocket::Rocket {
     dotenv().ok();
-    rocket::custom(config::from_env())
+    rocket::custom(config::build())
         .attach(Template::fairing())
         .attach(db::Postgres::fairing())
         .mount("/", routes())
