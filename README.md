@@ -46,16 +46,17 @@ While in Alpha status there are no guarantees about compatibility between versio
 
 What needs to be completed before Launchpad moves to a beta release?
 
-1. Complete the "forgot password" flow, including sending reset emails
-1. Fully integrate Postgres into the development process
-1. Integrate with at least one OAuth2 provider and verify table schema
-1. Provide Dockerfiles and `docker-compose` support
-1. Example CI/CD setup with GitHub Actions
-1. Example deployment workflow
-1. Fully documented public API
-1. Setup caching for backend operations via Redis
-1. Aria support
-1. A route accessible only to users with a specific role ("Admin")
+- [ ] Complete the "forgot password" flow, including sending reset emails
+- [ ] Fully integrate Postgres into the development process
+- [ ] Integrate with at least one OAuth2 provider and verify table schema
+- [ ] Provide Dockerfiles and `docker-compose` support
+- [ ] Example CI/CD setup with GitHub Actions
+- [ ] Example deployment workflow
+- [ ] Fully documented public API
+- [ ] Setup caching for backend operations via Redis
+- [ ] Aria support
+- [ ] A route accessible only to users with a specific role ("Admin")
+- [ ] [Instant Multi-Page App](https://instantmultipageapp.com/) implementation for the default MVC system
 
 ### Contributing
 
