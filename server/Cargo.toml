@@ -6,6 +6,7 @@ edition = "2018"
 workspace = ".."
 
 [dependencies]
+diesel_migrations = "1.4.0"
 dotenv = "0.15"
 rocket = "0.4.5"
 scrypt = "0.4.1"

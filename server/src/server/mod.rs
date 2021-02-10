@@ -1,4 +1,5 @@
 use dotenv::dotenv;
+use rocket::fairing::AdHoc;
 use rocket_contrib::serve::StaticFiles;
 use rocket_contrib::templates::Template;
 
@@ -13,6 +14,10 @@ pub fn rocket() -> rocket::Rocket {
     rocket::custom(config::build())
         .attach(Template::fairing())
         .attach(db::Postgres::fairing())
+        .attach(AdHoc::on_attach(
+            "Database migrations",
+            db::run_db_migrations,
+        ))
         .mount("/", routes())
         .mount("/", StaticFiles::from("../public/root").rank(20))
         .mount("/public/css", StaticFiles::from("../public/css"))

@@ -18,8 +18,8 @@ args = ["production"]
 dependencies = ["css-install"]
 workspace = false
 
-[tasks.serve]
-run_task = "serve"
+[tasks.start]
+run_task = "start"
 dependencies = ["css-build"]
 
 [tasks.deploy]

@@ -5,7 +5,7 @@ args = ["build"]
 [tasks.deploy]
 dependencies = ["build-release"]
 
-[tasks.serve]
+[tasks.start]
 command = "cargo"
 args = ["run"]
 watch = { watch = [
