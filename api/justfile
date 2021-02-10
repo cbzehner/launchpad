@@ -1,0 +1,17 @@
+# Local Variables:
+# mode: makefile
+# End:
+# vim: set ft=make :
+
+# List available recipes
+default:
+  @just --list
+
+build:
+  cargo build
+
+run:
+  cargo run
+
+test:
+  cargo test
