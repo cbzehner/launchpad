@@ -10,8 +10,14 @@ default:
 build:
   cargo build
 
+start:
+  cargo watch -x run
+
 run:
   cargo run
 
 test:
   cargo test
+
+watch:
+  cargo watch
