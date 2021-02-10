@@ -1,6 +1,0 @@
-{% if debug %}
-    <div id="debug" class="p-8">
-        <h3 class="text-lg">Template context</h3>
-        <p>{{__tera_context}}</p>
-    </div>
-{% endif %}
