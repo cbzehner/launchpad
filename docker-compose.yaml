@@ -18,14 +18,25 @@ services:
     networks:
       - intranet
 
-  kratos-selfservice-ui-node:
-    image: oryd/kratos-selfservice-ui-node:v0.5.0
-    environment:
-      - KRATOS_PUBLIC_URL=http://kratos:4433/
-      - KRATOS_ADMIN_URL=http://kratos:4434/
+  web-auth-react:
+    image: "node:lts-slim"
+    user: "node:node"
+    working_dir: "/srv"
+    command: ["yarn", "start"]
+    stdin_open: true
+    ports:
+      - "4435:4435"
     networks:
       - intranet
     restart: on-failure
+    environment:
+      - PATH=/srv/node_modules/.bin:$PATH
+      - PORT=4435
+      - KRATOS_BROWSER_URL=http://127.0.0.1:4455/.ory/kratos/public
+      - JWKS_URL=http://localhost:4456/.well-known/jwks.json
+      - SECURITY_MODE=jwks
+    volumes:
+      - "./web/auth:/srv:delegated"
 
   kratos:
     depends_on:
@@ -38,6 +49,7 @@ services:
     environment:
       - DSN=sqlite:///var/lib/sqlite/db.sqlite?_fk=true
       - LOG_LEVEL=trace
+      - SERVE_PUBLIC_BASE_URL=http://127.0.0.1:4455/.ory/kratos/public/
     command: serve -c /etc/config/kratos/kratos.yml --dev
     volumes:
       - type: volume
@@ -49,6 +61,22 @@ services:
         target: /etc/config/kratos
     networks:
       - intranet
+
+  oathkeeper:
+    image: oryd/oathkeeper:v0.38
+    depends_on:
+      - kratos
+    ports:
+      - 4455:4455
+      - 4456:4456
+    command: serve proxy -c "/etc/config/oathkeeper/oathkeeper.yml"
+    environment:
+      - LOG_LEVEL=debug
+    restart: on-failure
+    networks:
+      - intranet
+    volumes:
+      - ./services/auth/oathkeeper:/etc/config/oathkeeper
 
   mailslurper:
     image: oryd/mailslurper:latest-smtps

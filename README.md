@@ -37,7 +37,6 @@ Run `cargo install cargo-chef just watchexec` to install them.
 ![diagram](https://user-images.githubusercontent.com/3886290/107551504-34787a80-6b87-11eb-9299-92cebe454176.png)
 [Edit](https://whimsical.com/launchpad-Y4AZpD16s4S7exbrayWQNZ)
 
-
 ### Frontend
 
 The frontend consists of three separate components:
@@ -56,6 +55,14 @@ PostgreSQL is used as the primary database.
 The reverse proxy, [Traefik](https://github.com/traefik/traefik) and/or [ORY Oathkeeper](https://github.com/ory/oathkeeper), will ensure that requests are routed to the appropriate frontend and confirm access against the identity server [ORY Kratos](https://github.com/ory/kratos).
 
 Unauthenticated users will be redirected to the `auth` subdomain and after logging in they'll be redirected back to their original destination. If they don't have access (example: a non-admin user attempting to access the `admin` subdomain they will encounter a `404 Not Found` error).
+
+### Ports
+
+Port   | Service        | Description
+------ | ------         |----------
+`4455` | ORY Oathkeeper | $
+`4435` | Web Auth React | (
+`4445` | ???            | ^
 
 
 ## Who should use this?
