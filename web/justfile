@@ -1,0 +1,23 @@
+# Local Variables:
+# mode: makefile
+# End:
+# vim: set ft=make :
+
+# List available recipes
+default:
+  @just --list
+
+build:
+  yarn build
+
+start:
+  yarn start
+
+run:
+  yarn start
+
+test:
+  yarn test
+
+watch:
+  yarn start

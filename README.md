@@ -61,7 +61,7 @@ Unauthenticated users will be redirected to the `auth` subdomain and after loggi
 Port   | Service        | Description
 ------ | ------         |----------
 `4455` | ORY Oathkeeper | $
-`4435` | Web Auth React | (
+`4435` | Web            | (
 `4445` | ???            | ^
 
 

@@ -18,7 +18,7 @@ services:
     networks:
       - intranet
 
-  web-auth-react:
+  web:
     image: "node:lts-slim"
     user: "node:node"
     working_dir: "/srv"
@@ -36,7 +36,7 @@ services:
       - JWKS_URL=http://localhost:4456/.well-known/jwks.json
       - SECURITY_MODE=jwks
     volumes:
-      - "./web/auth:/srv:delegated"
+      - "./web:/srv:delegated"
 
   kratos:
     depends_on:

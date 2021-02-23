@@ -18,10 +18,10 @@
   mutators:
     - handler: noop
 
-- id: "ory:web-auth-react:anonymous"
+- id: "ory:web:anonymous"
   upstream:
     preserve_host: true
-    url: "http://web-auth-react:4435"
+    url: "http://web:4435"
   match:
     url: "http://127.0.0.1:4455/<{error,recovery,verify,auth/*,**.css,**.js}{/,}>"
     methods:
@@ -33,10 +33,10 @@
   mutators:
     - handler: noop
 
-- id: "ory:web-auth-react:protected"
+- id: "ory:web:protected"
   upstream:
     preserve_host: true
-    url: "http://web-auth-react:4435"
+    url: "http://web:4435"
   match:
     url: "http://127.0.0.1:4455/<{,callback,debug,dashboard,settings}>"
     methods:
