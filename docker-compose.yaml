@@ -86,6 +86,13 @@ services:
     networks:
       - intranet
 
+  vigil:
+    image: valeriansaliou/vigil:v1.19.0
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./services/observability/vigil/config.cfg:/etc/vigil.cfg
+
 networks:
   intranet:
 
