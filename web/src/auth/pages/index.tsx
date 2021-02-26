@@ -1,9 +1,9 @@
-import React from 'react';
+import React from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
 
-import Callback from './Callback';
-import Login from './Login';
-import Registration from './Registration';
+import Callback from "./Callback";
+import Login from "./Login";
+import Registration from "./Registration";
 
 export default function Auth() {
   return (
@@ -20,6 +20,6 @@ export default function Auth() {
         </Route>
         <Redirect to="/auth/login" />
       </Switch>
-    </div >
+    </div>
   );
 }

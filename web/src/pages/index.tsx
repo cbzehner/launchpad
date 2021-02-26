@@ -1,7 +1,7 @@
-import React from 'react';
+import React from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
 
-import Home from './Home';
+import Home from "./Home";
 
 export default function AuthenticatedPages() {
   return (
@@ -9,7 +9,8 @@ export default function AuthenticatedPages() {
       <Route exact path="/">
         <Home />
       </Route>
-      <Redirect to="/auth/login" /> {/* Redirect uncaught routes to login page */}
+      <Redirect to="/auth/login" />{" "}
+      {/* Redirect uncaught routes to login page */}
     </Switch>
   );
 }

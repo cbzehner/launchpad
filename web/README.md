@@ -11,6 +11,7 @@ The web front-end.
 Initial design heavily based on [ellioseven/kratos-ss-ui-react](https://github.com/ellioseven/kratos-ss-ui-react) and [eduardosanzb/kratos-spa-test](https://github.com/eduardosanzb/kratos-spa-test)
 
 ## Getting Started with Create React App
+
 <details>
 <summary>Full documentation...</summary>
 
@@ -58,4 +59,5 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
+
 </details>

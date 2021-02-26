@@ -1,22 +1,22 @@
-import React, { lazy, Suspense } from 'react';
+import React, { lazy, Suspense } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 // import { ProvideAuth } from "./hooks/use-auth"
-import Loading from './components/Loading';
+import Loading from "./components/Loading";
 
-import './App.css';
+import "./App.css";
 
-const AuthPages = lazy(() => import('./auth/pages'))
-const LoggedInPages = lazy(() => import('./pages'))
+const AuthPages = lazy(() => import("./auth/pages"));
+const LoggedInPages = lazy(() => import("./pages"));
 
 function App() {
   return (
     <div className="App">
       {/* <ProvideAuth> */}
       <Router>
-        <Suspense fallback={<Loading />} >
+        <Suspense fallback={<Loading />}>
           <Switch>
-            <Route path="/auth" >
+            <Route path="/auth">
               <AuthPages />
             </Route>
             <Route>
@@ -24,9 +24,9 @@ function App() {
             </Route>
           </Switch>
         </Suspense>
-      </Router >
+      </Router>
       {/* </ProvideAuth> */}
-    </div >
+    </div>
   );
 }
 
