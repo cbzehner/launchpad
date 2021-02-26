@@ -3,20 +3,17 @@ import { Configuration, PublicApi } from "@ory/kratos-client"
 
 import { AuthFlow, FlowType, MethodFlowConfig } from '../types';
 
-const KRATOS_BROWSER_URL = "http://127.0.0.1:4433"
-
 // Initialize the requested authentication flow.
 export const initializeAuth = (flowType: FlowType): Promise<AuthFlow> => {
-  const authService = new PublicApi(new Configuration({ basePath: KRATOS_BROWSER_URL }))
+  const authService = new PublicApi(new Configuration({ basePath: process.env.REACT_APP_KRATOS_BROWSER_URL }))
 
   return new Promise(async (resolve, reject) => {
     // Fetch the flow id set by the Auth service from the browser URL.
-    const SELF_SERVICE_URL = `http://127.0.0.1:4433/self-service/${flowType}/browser`
     const params = new URLSearchParams(window.location.search)
     // It no flow parameter is present, redirect the user to the Auth service to initialize the auth flow.
-    if (!params.has('flow')) return window.location.href = SELF_SERVICE_URL
+    if (!params.has('flow')) return window.location.href = selfServiceAuthUrl(flowType)
     const flowId = params.get("flow")
-    if (!flowId) return window.location.href = SELF_SERVICE_URL
+    if (!flowId) return window.location.href = selfServiceAuthUrl(flowType)
 
     let authRequest = requestForFlowType(authService, flowType, flowId)
 
@@ -29,6 +26,8 @@ export const initializeAuth = (flowType: FlowType): Promise<AuthFlow> => {
     }
   })
 }
+
+export const selfServiceAuthUrl = (flowType: FlowType) => `${process.env.REACT_APP_KRATOS_BROWSER_URL}/self-service/${flowType}/browser`
 
 // Build the request to the authentication service to fetch the information needed for the specific login flow.
 const requestForFlowType = (authService: PublicApi, flowType: FlowType, flowId: string): Promise<AxiosResponse<AuthFlow>> => {

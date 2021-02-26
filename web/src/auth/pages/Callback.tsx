@@ -1,7 +1,7 @@
 import React, { useEffect } from "react"
-import { PublicApi } from "@ory/kratos-client"
+import { PublicApi, Configuration } from "@ory/kratos-client"
 
-const KRATOS_BROWSER_URL = "http://127.0.0.1:4455/.ory/kratos/public"
+const KRATOS_BROWSER_URL = ""
 
 export const LSK_IS_AUTHENTICATED = "kratos.isAuthenticated"
 
@@ -20,9 +20,9 @@ export const setAuthenticated = () => localStorage.setItem(LSK_IS_AUTHENTICATED,
 export const unsetAuthenticated = () => localStorage.removeItem(LSK_IS_AUTHENTICATED)
 
 export default function Callback() {
-  const publicEndpoint = new PublicApi(undefined, KRATOS_BROWSER_URL)
+  const authService = new PublicApi(new Configuration({ basePath: process.env.REACT_APP_KRATOS_BROWSER_URL }))
   useEffect(() => {
-    publicEndpoint.whoami()
+    authService.whoami()
       .then(() => {
         setAuthenticated()
         unsetAuthenticatedReferer()

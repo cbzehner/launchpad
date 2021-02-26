@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-import { extractFormDataFromAuthResponse, initializeAuth } from '../utils/kratos'
+import { extractFormDataFromAuthResponse, initializeAuth, selfServiceAuthUrl } from '../utils/kratos'
 import { Form, FormWrapper } from '../components';
 import { MethodFlowConfig } from '../types'
 
@@ -20,7 +20,7 @@ export default function Login() {
   }, [])
 
   return (
-    <FormWrapper primaryText="Sign in to your account" secondaryText="sign up for an account" secondaryUrl="http://127.0.0.1:4433/self-service/registration/browser">
+    <FormWrapper primaryText="Sign in to your account" secondaryText="sign up for an account" secondaryUrl={selfServiceAuthUrl('registration')}>
       <Form data={data} actionLabel="Sign in" />
     </FormWrapper>
   )

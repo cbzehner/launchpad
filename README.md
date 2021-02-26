@@ -30,6 +30,7 @@ This project depends on a few Rust packages
 - `cargo-chef` which builds Rust projects in Docker with automatic caching
 - `just` is a `make`-style task runner that doesn't require tabs
 - `watchexec` is a filewatcher for easy development
+
 Run `cargo install cargo-chef just watchexec` to install them.
 
 ## Architecture

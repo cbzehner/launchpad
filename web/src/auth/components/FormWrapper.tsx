@@ -7,10 +7,6 @@ type Props = {
   children: React.ReactChild
 }
 
-// Sign in to your account
-// sign up for an account
-// http://127.0.0.1:4433/self-service/registration/browser
-
 export default function FormWrapper({ primaryText, secondaryText, secondaryUrl, children }: Props) {
   return (
     <div className="flex flex-col justify-center min-h-screen py-12 bg-gray-50 sm:px-6 lg:px-8">
