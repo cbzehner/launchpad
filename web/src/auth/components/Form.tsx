@@ -94,10 +94,10 @@ const displayName = (name: FieldName): string => {
     case 'identifier':
     case 'traits.email':
       return 'Email address';
-    case 'traits.name.first':
-      return 'First name';
-    case 'traits.name.last':
-      return 'Last name';
+    case 'traits.name.preferred':
+      return 'Preferred name';
+    case 'traits.name.full':
+      return 'Full name';
     case 'csrf_token':
       return 'Hidden value'
   }
@@ -106,9 +106,9 @@ const displayName = (name: FieldName): string => {
 // Assign weights to the various field names that can be used to provide a stable sort order when displaying the authentication form.
 const fieldWeights = (name: FieldName): number => {
   switch (name) {
-    case 'traits.name.first':
+    case 'traits.name.preferred':
       return 10
-    case 'traits.name.last':
+    case 'traits.name.full':
       return 20
     case 'identifier':
     case 'traits.email':
@@ -130,9 +130,9 @@ const autoCompleteHints = (name: FieldName): AutocompleteHints => {
     case 'identifier':
     case 'traits.email':
       return 'email'
-    case 'traits.name.first':
+    case 'traits.name.preferred':
       return 'given-name'
-    case 'traits.name.last':
+    case 'traits.name.full':
       return 'family-name'
     case 'csrf_token':
       return 'off'

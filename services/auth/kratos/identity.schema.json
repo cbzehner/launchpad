@@ -29,10 +29,10 @@
         "name": {
           "type": "object",
           "properties": {
-            "first": {
+            "preferred": {
               "type": "string"
             },
-            "last": {
+            "full": {
               "type": "string"
             }
           }

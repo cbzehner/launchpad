@@ -7,6 +7,5 @@ export type AutocompleteHints = "off" | "on" | "name" | "given-name" | "family-n
 export type AuthFlow = LoginFlow | RecoveryFlow | RegistrationFlow | SettingsFlow | VerificationFlow
 export type MethodFlowConfig = LoginFlowMethodConfig | RecoveryFlowMethodConfig | RegistrationFlowMethodConfig | SettingsFlowMethodConfig | VerificationFlowMethodConfig
 export type FlowType = "login" | "recovery" | "registration" | "settings" | "verification"
-// TODO: Change to using "Preferred Name" & "Full Name" rather than "First Name" & "Last Name"
-export type FieldName = "csrf_token" | "identifier" | "password" | "traits.email" | "traits.name.first" | "traits.name.last"
+export type FieldName = "csrf_token" | "identifier" | "password" | "traits.email" | "traits.name.preferred" | "traits.name.full"
 
