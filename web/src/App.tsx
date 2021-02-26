@@ -6,8 +6,8 @@ import Loading from './components/Loading';
 
 import './App.css';
 
-const Auth = lazy(() => import('./pages/auth'))
-const AuthenticatedPages = lazy(() => import('./pages'))
+const AuthPages = lazy(() => import('./auth/pages'))
+const LoggedInPages = lazy(() => import('./pages'))
 
 function App() {
   return (
@@ -17,10 +17,10 @@ function App() {
         <Suspense fallback={<Loading />} >
           <Switch>
             <Route path="/auth" >
-              <Auth />
+              <AuthPages />
             </Route>
             <Route>
-              <AuthenticatedPages />
+              <LoggedInPages />
             </Route>
           </Switch>
         </Suspense>

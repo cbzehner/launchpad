@@ -29,11 +29,11 @@ selfservice:
 
     recovery:
       enabled: true
-      ui_url: http://127.0.0.1:4455/recovery
+      ui_url: http://127.0.0.1:4455/auth/recovery
 
     verification:
       enabled: true
-      ui_url: http://127.0.0.1:4455/verify
+      ui_url: http://127.0.0.1:4455/auth/verify
       after:
         default_browser_return_url: http://127.0.0.1:4455/
 

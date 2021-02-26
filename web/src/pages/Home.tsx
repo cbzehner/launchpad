@@ -2,15 +2,10 @@ import React from 'react';
 
 export default function Home() {
   return (
-    <div>
-      <div>Hello logged in user!</div>
-      <div><a href="/auth/logout">Logout</a></div>
-    </div>
-  )
-  return (
     <>
       <div className="fixed top-0 left-0 w-1/2 h-full bg-white" aria-hidden="true"></div>
       <div className="fixed top-0 right-0 w-1/2 h-full bg-gray-50" aria-hidden="true"></div>
+      <HeaderBanner />
       <div className="relative flex flex-col min-h-screen">
         {/* Navbar */}
         <nav className="flex-shrink-0 bg-indigo-600">
@@ -19,7 +14,7 @@ export default function Home() {
               {/* Logo section */}
               <div className="flex items-center px-2 lg:px-0 xl:w-64">
                 <div className="flex-shrink-0">
-                  <img className="w-auto h-8" src="https://tailwindui.com/img/logos/workflow-mark-indigo-300.svg" alt="Workflow" />
+                  <img className="w-auto h-8" src="https://tailwindui.com/img/logos/workflow-mark-indigo-300.svg" alt="company logo" />
                 </div>
               </div>
 
@@ -301,5 +296,36 @@ export default function Home() {
         </div>
       </div>
     </>
+  );
+}
+
+function HeaderBanner() {
+  return (
+    < div className="relative bg-green-500" >
+      <div className="px-3 py-3 mx-auto max-w-7xl sm:px-6 lg:px-8">
+        <div className="pr-16 sm:text-center sm:px-16">
+          <p className="font-medium text-white">
+            <span className="md:hidden">
+              You've successfully logged in to your brand new app!
+            </span>
+            <span className="hidden md:inline">
+              Congratulations! You've successfully logged in to your brand new app!
+            </span>
+            <span className="block sm:ml-2 sm:inline-block">
+              <a href="/" className="font-bold text-white underline"> Learn more <span aria-hidden="true">&rarr;</span></a>
+            </span>
+          </p>
+        </div>
+        <div className="absolute inset-y-0 right-0 flex items-start pt-1 pr-1 sm:pt-1 sm:pr-2 sm:items-start">
+          <button type="button" className="flex p-2 rounded-md hover:bg-green-400 focus:outline-none focus:ring-2 focus:ring-white">
+            <span className="sr-only">Dismiss</span>
+            {/* Heroicon name: outline/x */}
+            <svg className="w-6 h-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div >
   );
 }

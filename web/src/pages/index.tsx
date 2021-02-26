@@ -9,7 +9,7 @@ export default function AuthenticatedPages() {
       <Route exact path="/">
         <Home />
       </Route>
-      <Redirect to="/auth/login" />
+      <Redirect to="/auth/login" /> {/* Redirect uncaught routes to login page */}
     </Switch>
   );
 }

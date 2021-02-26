@@ -3,9 +3,7 @@ import { classnames } from 'tailwindcss-classnames';
 import { FormField as FormFieldType, Message as MessageType } from "@ory/kratos-client"
 import sortBy from 'lodash/sortBy'
 
-import { FieldName, MethodFlowConfig } from '../hooks/use-auth'
-
-type AutocompleteHints = "off" | "on" | "name" | "given-name" | "family-name" | "email" | "username" | "new-password" | "current-password" | "one-time-code" | "organization-title" | "street-address" | "address-line1" | "address-line2" | "address-line3" | "address-level1" | "address-level2" | "address-level3" | "address-level4" | "country" | "country-name" | "postal-code" | "bday" | "bday-day" | "bday-month" | "bday-year" | "sex" | "tel"
+import { AutocompleteHints, FieldName, MethodFlowConfig } from '../types'
 
 type EnhancedFormField = FormFieldType & {
   displayName?: string,
@@ -19,13 +17,9 @@ type Props = {
   actionLabel?: string
 }
 
-// TOMORROW:
-// 1. Add extra fields like "autocomplete" and "autofocus" to the FormFields
-// 4. Extract the outer wrapper from the Login & Registration forms into a shared component.
-// 5. Split up the auth hook into helper functions and write comments.
-// 6. Write comments in this class for each component.
-
-export default function AuthForm({ data, actionLabel = "Submit" }: Props) {
+// Auth form which takes an auth flow configuration from Kratos and renders it as a form.
+// The form fields are enhanced with extra properties that are specific to UI.
+export default function Form({ data, actionLabel = "Submit" }: Props) {
   if (!data) return null;
 
   const fields = enhanceFields(data.fields)
@@ -42,6 +36,7 @@ export default function AuthForm({ data, actionLabel = "Submit" }: Props) {
   )
 }
 
+// An individual field in the auth form.
 function FormField({ field }: { field: EnhancedFormField }) {
   const { messages = [] } = field
 
@@ -67,6 +62,7 @@ function FormField({ field }: { field: EnhancedFormField }) {
   )
 }
 
+// A message provided by the auth service for display purposes.
 function Message({ message }: { message: MessageType }) {
   // TODO: Convert className to use TailwindCSS classes
   return <div className={`message ${message.type}`}>{message.text}</div>

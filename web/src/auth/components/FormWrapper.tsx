@@ -1,41 +1,35 @@
-import React, { useState, useEffect } from 'react';
-import AuthForm from '../../components/AuthForm';
+import React from 'react';
 
-import { extractFormDataFromAuthResponse, initializeAuth, MethodFlowConfig } from '../../hooks/use-auth'
+type Props = {
+  primaryText: string,
+  secondaryText: string,
+  secondaryUrl: string,
+  children: React.ReactChild
+}
 
-export default function Login() {
-  const [data, setData] = useState<MethodFlowConfig>()
+// Sign in to your account
+// sign up for an account
+// http://127.0.0.1:4433/self-service/registration/browser
 
-  useEffect(() => {
-    const asyncEffect = async () => {
-      const authResponse = await initializeAuth('login')
-      const formData = extractFormDataFromAuthResponse(authResponse)
-      // TODO: Guard with Typeguard rather than dangerously casting.
-      setData(formData as MethodFlowConfig)
-    }
-
-    // TODO: Remove ?flow=<flowId> from the URL after the useEffect hook completes.
-    asyncEffect()
-  }, [])
-
+export default function FormWrapper({ primaryText, secondaryText, secondaryUrl, children }: Props) {
   return (
     <div className="flex flex-col justify-center min-h-screen py-12 bg-gray-50 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <img className="w-auto h-12 mx-auto" src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg" alt="Workflow" />
         <h2 className="mt-6 text-3xl font-extrabold text-center text-gray-900">
-          Sign in to your account
+          {primaryText}
         </h2>
         <p className="mt-2 text-sm text-center text-gray-600 max-w">
           Or&nbsp;
-          <a href="http://127.0.0.1:4433/self-service/registration/browser" className="font-medium text-indigo-600 hover:text-indigo-500">
-            sign up for an account
+          <a href={secondaryUrl} className="font-medium text-indigo-600 hover:text-indigo-500">
+            {secondaryText}
           </a>
         </p>
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="px-4 py-8 bg-white shadow sm:rounded-lg sm:px-10">
-          <AuthForm data={data} actionLabel="Sign in" />
+          {children}
           <div className="mt-6">
             <div className="relative">
               <div className="absolute inset-0 flex items-center">

@@ -18,12 +18,12 @@
   mutators:
     - handler: noop
 
-- id: "ory:web:anonymous"
+- id: "web:anonymous"
   upstream:
     preserve_host: true
     url: "http://web:4435"
   match:
-    url: "http://127.0.0.1:4455/<{error,recovery,verify,auth/*,**.css,**.js}{/,}>"
+    url: "http://127.0.0.1:4455/<{error,auth/*,**.css,**.js}{/,}>"
     methods:
       - GET
   authenticators:
@@ -33,7 +33,7 @@
   mutators:
     - handler: noop
 
-- id: "ory:web:protected"
+- id: "web:protected"
   upstream:
     preserve_host: true
     url: "http://web:4435"
