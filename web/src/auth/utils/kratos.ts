@@ -1,3 +1,4 @@
+import process from "process";
 import { AxiosResponse } from "axios";
 import { Configuration, PublicApi } from "@ory/kratos-client";
 

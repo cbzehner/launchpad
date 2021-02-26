@@ -1,7 +1,6 @@
-import React, { useEffect } from "react";
+import process from "process";
+import { useEffect } from "react";
 import { PublicApi, Configuration } from "@ory/kratos-client";
-
-const KRATOS_BROWSER_URL = "";
 
 export const LSK_IS_AUTHENTICATED = "kratos.isAuthenticated";
 
@@ -42,7 +41,7 @@ export default function Callback() {
         unsetAuthenticatedReferer();
         console.log(error);
       });
-  }, []);
+  });
 
   return null;
 }

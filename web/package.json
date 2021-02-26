@@ -15,48 +15,42 @@
     "autoprefixer": "^9",
     "lodash": "^4.17.21",
     "postcss": "^7",
-    "prettier": "^2.2.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.2",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat",
     "tailwindcss-classnames": "^2.0.4",
-    "typescript": "^4.1.2",
     "web-vitals": "^1.0.1"
   },
   "devDependencies": {
+    "@commitlint/cli": "^12.0.0",
+    "@commitlint/config-conventional": "^12.0.0",
     "@types/jest": "^26.0.15",
     "@types/node": "^12.0.0",
     "@types/react": "^17.0.0",
-    "@types/react-dom": "^17.0.0"
+    "@types/react-dom": "^17.0.0",
+    "@typescript-eslint/eslint-plugin": "^4.15.2",
+    "@typescript-eslint/parser": "^4.15.2",
+    "eslint": "^7.20.0",
+    "eslint-config-prettier": "^8.1.0",
+    "eslint-plugin-jest-dom": "^3.6.5",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-react": "^7.22.0",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "eslint-plugin-testing-library": "^3.10.1",
+    "husky": "=4",
+    "lint-staged": ">=10",
+    "prettier": "^2.2.1",
+    "typescript": "^4.1.2"
   },
   "scripts": {
     "build": "craco build",
     "eject": "react-scripts eject",
-    "format": "prettier --write src/**/*.{js,jsx,ts,tsx,json,css,scss,md}",
+    "format": "prettier --write .",
     "start": "craco start",
-    "test": "craco test"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
-  "lint-staged": {
-    "src/**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
-      "prettier --write"
-    ]
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest",
-      "plugin:jsx-a11y/recommended"
-    ],
-    "plugins": [
-      "jsx-a11y"
-    ]
+    "test": "craco test",
+    "lint": "eslint . --cache --fix --ext .ts,.tsx"
   },
   "browserslist": {
     "production": [
@@ -69,5 +63,16 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "yarn commitlint --edit $1",
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": "eslint --cache --fix",
+    "*.{js,jsx,ts,tsx,css,json,md}": "prettier --write",
+    "*.test.{ts,tsx}": "jest --bail —-findRelatedTests"
   }
 }

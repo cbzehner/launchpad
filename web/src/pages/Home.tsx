@@ -64,6 +64,7 @@ export default function Home() {
               <div className="flex lg:hidden">
                 {/* Mobile menu button */}
                 <button
+                  type="button"
                   className="inline-flex items-center justify-center p-2 text-indigo-400 bg-indigo-600 rounded-md hover:text-white hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-indigo-600 focus:ring-white"
                   aria-expanded="false"
                 >
@@ -133,6 +134,7 @@ export default function Home() {
                   <div className="relative flex-shrink-0 ml-4">
                     <div>
                       <button
+                        type="button"
                         className="flex text-sm text-white bg-indigo-700 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-indigo-700 focus:ring-white"
                         id="user-menu"
                         aria-haspopup="true"
@@ -572,11 +574,11 @@ function HeaderBanner() {
         <div className="pr-16 sm:text-center sm:px-16">
           <p className="font-medium text-white">
             <span className="md:hidden">
-              You've successfully logged in to your brand new app!
+              You&apos;ve successfully logged in to your brand new app!
             </span>
             <span className="hidden md:inline">
-              Congratulations! You've successfully logged in to your brand new
-              app!
+              Congratulations! You&apos;ve successfully logged in to your brand
+              new app!
             </span>
             <span className="block sm:ml-2 sm:inline-block">
               <a href="/" className="font-bold text-white underline">
