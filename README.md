@@ -27,11 +27,13 @@ The components are modular, empowering you to swap out solutions that don't make
 #### Development Tools
 
 This project depends on a few Rust packages
-- `cargo-chef` which builds Rust projects in Docker with automatic caching
-- `just` is a `make`-style task runner that doesn't require tabs
-- `watchexec` is a filewatcher for easy development
+- `cargo-chef` which builds Rust projects in Docker with automatic caching.
+- `just` is a `make`-style task runner that doesn't require tabs.
+- `watchexec` is a filewatcher for easy development.
+- `mdbook` is a command to create an online book from markdown files.
+- `mdbook-linkcheck` is a linter for verifying the mdbook links are valid.
 
-Run `cargo install cargo-chef just watchexec` to install them.
+Run `cargo install cargo-chef just watchexec mdkook mdbook-linkcheck` to install the dependencies.
 
 ## Architecture
 

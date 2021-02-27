@@ -1,0 +1,10 @@
+[book]
+authors = ["Chris Zehner"]
+language = "en"
+multilingual = false
+src = "src"
+title = "Launchpad: Software Startup Guide"
+
+[output.html.fold]
+enable = true
+
