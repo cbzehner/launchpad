@@ -7,6 +7,37 @@
 default:
   @just --list
 
+# Interact with the entire Launchpad service
+launch:
+  @echo 'T-Minus 10 seconds. Main engine starting...'
+  @sleep 1
+  @echo '9...'
+  @sleep 1
+  @echo '8...'
+  @sleep 1
+  @echo '7...'
+  @sleep 1
+  @echo '6...'
+  @sleep 1
+  @echo '5...'
+  @sleep 1
+  @echo '4...'
+  @sleep 1
+  @echo '3...'
+  @sleep 1
+  @echo '2...'
+  @sleep 1
+  @echo '1...'
+  @sleep 1
+  @echo 'Blastoff!'
+  @sleep 1
+  docker-compose up --remove-orphans
+
+# Initialize dependencies
+initialize:
+  @echo 'Installing web dependencies...'
+  cd web/ && just initialize
+
 # Build a specific Launchpad component
 build target:
   @echo 'Building {{target}}...'
