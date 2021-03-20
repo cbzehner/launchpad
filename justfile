@@ -9,29 +9,10 @@ default:
 
 # Interact with the entire Launchpad service
 launch:
-  @echo 'T-Minus 10 seconds. Main engine starting...'
-  @sleep 1
-  @echo '9...'
-  @sleep 1
-  @echo '8...'
-  @sleep 1
-  @echo '7...'
-  @sleep 1
-  @echo '6...'
-  @sleep 1
-  @echo '5...'
-  @sleep 1
-  @echo '4...'
-  @sleep 1
-  @echo '3...'
-  @sleep 1
-  @echo '2...'
-  @sleep 1
-  @echo '1...'
-  @sleep 1
-  @echo 'Blastoff!'
-  @sleep 1
-  docker-compose up --remove-orphans
+  @echo 'Main engine starting...'
+  @for i in $(seq 10 -1 1); do echo 'T-Minus: '$i'...' && sleep 1; done
+  @echo 'Liftoff!'
+  docker-compose --file ./services/deployment/docker/docker-compose.yaml up --remove-orphans
 
 # Initialize dependencies
 initialize:

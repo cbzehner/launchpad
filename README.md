@@ -19,7 +19,7 @@ The components are modular, empowering you to swap out solutions that don't make
 
 #### Base Dependencies
 - Rust
-- PostgreSQL
+- Postgres
 - Docker
 - NodeJS
 - Yarn
@@ -51,7 +51,7 @@ The frontend consists of three separate components:
 
 The backend consists of a primary API endpoint and secondary services, each of which handles a specific task.
 
-PostgreSQL is used as the primary database.
+Postgres is used as the primary database.
 
 ### Security
 
@@ -63,9 +63,14 @@ Unauthenticated users will be redirected to the `auth` subdomain and after loggi
 
 Port   | Service        | Description
 ------ | ------         |----------
-`4455` | ORY Oathkeeper | $
-`4435` | Web            | (
-`4445` | ???            | ^
+`4433` | ORY Kratos     | Administrative API endpoints
+`4433` | ORY Kratos     | Public API endpoints
+`4435` | React Web App  | Direct access, prefer going through Oathkeeper
+`4436` | Mailslurper    | ?
+`4437` | Mailslurper    | ?
+`4455` | ORY Oathkeeper | Public endpoint for accessing
+`4456` | ORY Oathkeeper | $
+`5432` | Postgres       | $
 
 
 ## Who should use this?
