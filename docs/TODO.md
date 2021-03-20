@@ -1,7 +1,7 @@
 # TODOs
 
 ## api
-1. Use dotenv instead of hard-coded secret values.
+1. ~~Use dotenv instead of hard-coded secret values.~~
 1. Setup authentication verification with Kratos auth service.
 1. Write a test verifying protected routes.
 1. Default all routes to Protected and write a "Guest" data guard to opt-routes from this behavior.
@@ -21,8 +21,8 @@
 
 ### deployments
 #### docker
-1. Use dotenv instead of hard-coded secret values in Docker.
-1. Create a `deployments/containers/` folder and set up a `just` command for running `docker-compose up --remove-orphans`.
+1. ~~Use dotenv instead of hard-coded secret values in Docker.~~
+1. ~~Create a `deployments/containers/` folder and set up a `just` command for running `docker-compose up --remove-orphans`.~~
 1. Deploy an unhardened "production" instance
 1. Harden production instance.
 
@@ -36,4 +36,7 @@
 1. Support logout from menu bar.
 
 ## docs
-1. Create a "book" directory and start writing an overview of launchpad.
+1. Create documentation walking through the setup and maintenence of a Launchpad project.
+1. Continue to flesh out the startup guide.
+1. Update the README.md to include high-level descriptions of the different services and point to more complete documentation.
+1. Create a book walking through some "twitter-clone" style apps using Launchpad.

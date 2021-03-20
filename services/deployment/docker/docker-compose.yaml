@@ -3,20 +3,20 @@ version: "3.7"
 services:
   postgres-database:
     image: postgres:13.2
-    environment:
-      - POSTGRES_PASSWORD=secret # Password for the `postgres` administrative user.
+    env_file:
+      - ./services/data/postgres/env.local
     networks:
       - intranet
     ports:
       - "5432:5432"
-    restart: always
+    restart: on-failure
     volumes:
       - type: volume
         source: postgres-data
         target: /var/lib/postgres/data
         read_only: false
       - type: bind
-        source: ../../data/postgres/init-db.sql
+        source: ./services/data/postgres/init-db.sql
         target: /docker-entrypoint-initdb.d/init.sql
 
   kratos-migrate:
@@ -24,14 +24,14 @@ services:
     command: -c /etc/config/kratos/kratos.yml migrate sql -e --yes
     depends_on:
       - postgres-database
-    environment:
-      - DSN=postgres://kratos:secret@postgres-database:5432/kratos?sslmode=disable&max_conns=20&max_idle_conns=4
+    env_file:
+      - ./services/auth/kratos/env.local
     networks:
       - intranet
     restart: on-failure
     volumes:
       - type: bind
-        source: ../../auth/kratos
+        source: ./services/auth/kratos
         target: /etc/config/kratos
 
   kratos:
@@ -39,10 +39,8 @@ services:
     command: serve -c /etc/config/kratos/kratos.yml --dev
     depends_on:
       - kratos-migrate
-    environment:
-      - DSN=postgres://kratos:secret@postgres-database:5432/kratos?sslmode=disable&max_conns=20&max_idle_conns=4
-      - LOG_LEVEL=trace
-      - SERVE_PUBLIC_BASE_URL=http://127.0.0.1:4455/.ory/kratos/public/
+    env_file:
+      - ./services/auth/kratos/env.local
     networks:
       - intranet
     ports:
@@ -51,7 +49,7 @@ services:
     restart: unless-stopped
     volumes:
       - type: bind
-        source: ../../auth/kratos
+        source: ./services/auth/kratos
         target: /etc/config/kratos
 
   oathkeeper:
@@ -59,8 +57,8 @@ services:
     command: serve proxy -c "/etc/config/oathkeeper/oathkeeper.yml"
     depends_on:
       - kratos
-    environment:
-      - LOG_LEVEL=debug
+    env_file:
+      - ./services/auth/oathkeeper/env.local
     networks:
       - intranet
     ports:
@@ -68,19 +66,20 @@ services:
       - 4456:4456
     restart: on-failure
     volumes:
-      - ../../auth/oathkeeper:/etc/config/oathkeeper
+      - type: bind
+        source: ./services/auth/oathkeeper
+        target: /etc/config/oathkeeper
 
   web:
     image: "node:lts-slim"
     command: ["yarn", "start"]
     depends_on:
       - kratos
+    env_file:
+      - ./web/env.local
     environment:
       - PATH=/srv/node_modules/.bin:$PATH
       - PORT=4435
-      - KRATOS_BROWSER_URL=http://127.0.0.1:4455/.ory/kratos/public
-      - JWKS_URL=http://localhost:4456/.well-known/jwks.json
-      - SECURITY_MODE=jwks
     networks:
       - intranet
     ports:
@@ -89,7 +88,7 @@ services:
     stdin_open: true
     user: "node:node"
     volumes:
-      - "../../../web:/srv:delegated"
+      - "./web:/srv:delegated"
     working_dir: "/srv"
 
   # TODO: Run in local development only.

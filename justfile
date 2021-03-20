@@ -12,7 +12,7 @@ launch:
   @echo 'Main engine starting...'
   @for i in $(seq 10 -1 1); do echo 'T-Minus: '$i'...' && sleep 1; done
   @echo 'Liftoff!'
-  docker-compose --file ./services/deployment/docker/docker-compose.yaml up --remove-orphans
+  docker-compose --file ./services/deployment/docker/docker-compose.yaml --project-dir . up --remove-orphans
 
 # Initialize dependencies
 initialize:
