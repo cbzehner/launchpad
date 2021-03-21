@@ -98,7 +98,7 @@ services:
       kratos:
         condition: service_started #service_healthy
     env_file:
-      - ./web/env.local
+      - ./services/web/env.local
     environment:
       - PATH=/srv/node_modules/.bin:$PATH
       - PORT=4435
@@ -110,16 +110,16 @@ services:
     stdin_open: true
     user: "node:node"
     volumes:
-      - "./web:/srv:delegated"
+      - "./services/web:/srv:delegated"
     working_dir: "/srv"
 
   api:
-    build: ./api/
+    build: ./services/api/
     depends_on:
       postgres-database:
         condition: service_healthy
     env_file:
-      - ./api/env.local
+      - ./services/api/env.local
     # healthcheck:
     #   test: ["CMD-SHELL", "curl", "--fail", "http://localhost/healthz"]
     #   interval: 10s
