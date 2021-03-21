@@ -17,10 +17,9 @@ services:
       - "5432:5432"
     restart: on-failure
     volumes:
-      - type: volume
-        source: postgres-data
-        target: /var/lib/postgres/data
-        read_only: false
+      - type: bind
+        source: ./.data/postgres-data
+        target: /var/lib/postgresql/data
       - type: bind
         source: ./services/data/postgres/init-db.sql
         target: /docker-entrypoint-initdb.d/init.sql
@@ -134,6 +133,3 @@ services:
 
 networks:
   intranet:
-
-volumes:
-  postgres-data:
