@@ -91,6 +91,25 @@ services:
       - "./web:/srv:delegated"
     working_dir: "/srv"
 
+  api:
+    build: ./api/
+    depends_on:
+      postgres-database:
+        condition: service_healthy
+    env_file:
+      - ./api/env.local
+    # healthcheck:
+    #   test: ["CMD-SHELL", "curl", "--fail", "http://localhost"] # TODO: /healthz
+    #   interval: 10s
+    #   retries: 5
+    #   start_period: 10s
+    #   timeout: 5s
+    networks:
+      - intranet
+    ports:
+      - "4438:4438"
+    restart: on-failure
+
 networks:
   intranet:
 
