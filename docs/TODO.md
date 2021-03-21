@@ -23,6 +23,7 @@
 #### docker
 1. ~~Use dotenv instead of hard-coded secret values in Docker.~~
 1. ~~Create a `deployments/containers/` folder and set up a `just` command for running `docker-compose up --remove-orphans`.~~
+1. Healthchecks for all services.
 1. Deploy an unhardened "production" instance
 1. Harden production instance.
 

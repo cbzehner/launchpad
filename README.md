@@ -68,9 +68,9 @@ Port   | Service        | Description
 `4435` | React Web App  | Direct access, prefer going through Oathkeeper
 `4436` | Mailslurper    | ?
 `4437` | Mailslurper    | ?
+`4438` | Backend API    | $
 `4455` | ORY Oathkeeper | Public endpoint for accessing
 `4456` | ORY Oathkeeper | $
-`4438` | Backend API    | $
 `5432` | Postgres       | $
 
 

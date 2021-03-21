@@ -5,6 +5,12 @@ services:
     image: postgres:13.2
     env_file:
       - ./services/data/postgres/env.local
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      retries: 5
+      start_period: 10s
+      timeout: 5s
     networks:
       - intranet
     ports:
@@ -23,7 +29,8 @@ services:
     image: oryd/kratos:v0.5.5-alpha.1
     command: -c /etc/config/kratos/kratos.yml migrate sql -e --yes
     depends_on:
-      - postgres-database
+      postgres-database:
+        condition: service_healthy
     env_file:
       - ./services/auth/kratos/env.local
     networks:
@@ -38,9 +45,16 @@ services:
     image: oryd/kratos:v0.5.5-alpha.1
     command: serve -c /etc/config/kratos/kratos.yml --dev
     depends_on:
-      - kratos-migrate
+      kratos-migrate:
+        condition: service_started
     env_file:
       - ./services/auth/kratos/env.local
+    # healthcheck:
+    #   test: ["CMD-SHELL", "curl", "--fail", "http://localhost/health/ready"]
+    #   interval: 10s
+    #   retries: 5
+    #   start_period: 10s
+    #   timeout: 5s
     networks:
       - intranet
     ports:
@@ -56,9 +70,16 @@ services:
     image: oryd/oathkeeper:v0.38
     command: serve proxy -c "/etc/config/oathkeeper/oathkeeper.yml"
     depends_on:
-      - kratos
+      kratos:
+        condition: service_started
     env_file:
       - ./services/auth/oathkeeper/env.local
+    # healthcheck:
+    #   test: ["CMD-SHELL", "curl", "--fail", "http://localhost/health/ready"]
+    #   interval: 10s
+    #   retries: 5
+    #   start_period: 10s
+    #   timeout: 5s
     networks:
       - intranet
     ports:
@@ -74,7 +95,8 @@ services:
     image: "node:lts-slim"
     command: ["yarn", "start"]
     depends_on:
-      - kratos
+      kratos:
+        condition: service_started #service_healthy
     env_file:
       - ./web/env.local
     environment:
@@ -99,7 +121,7 @@ services:
     env_file:
       - ./api/env.local
     # healthcheck:
-    #   test: ["CMD-SHELL", "curl", "--fail", "http://localhost"] # TODO: /healthz
+    #   test: ["CMD-SHELL", "curl", "--fail", "http://localhost/healthz"]
     #   interval: 10s
     #   retries: 5
     #   start_period: 10s
