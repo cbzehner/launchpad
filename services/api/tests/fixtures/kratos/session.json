@@ -1,0 +1,36 @@
+{
+    "id": "30aa0de9-c9bc-4b79-a5e3-d1bf3008d46b",
+    "active": true,
+    "expires_at": "2031-03-22T20:34:25.343547Z",
+    "authenticated_at": "2021-03-21T20:34:25.343547Z",
+    "issued_at": "2021-03-21T20:34:25.343582Z",
+    "identity": {
+        "id": "53354449-9e03-40fc-bc90-fc499e6d44e3",
+        "schema_id": "default",
+        "schema_url": "http://127.0.0.1:4455/.ory/kratos/public/schemas/default",
+        "traits": {
+            "name": {
+                "full": "Christopher Zehner",
+                "preferred": "Chris"
+            },
+            "email": "cbzehner@test.com"
+        },
+        "verifiable_addresses": [
+            {
+                "id": "da2f266c-caf7-4d96-bd3e-ec5fa14310fa",
+                "value": "cbzehner@test.com",
+                "verified": false,
+                "via": "email",
+                "status": "pending",
+                "verified_at": null
+            }
+        ],
+        "recovery_addresses": [
+            {
+                "id": "d63466d3-e82e-4da9-8e95-4aaf61ce7288",
+                "value": "cbzehner@test.com",
+                "via": "email"
+            }
+        ]
+    }
+}

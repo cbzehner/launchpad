@@ -1,19 +1,12 @@
-use rocket::{response::content, Catcher, Route};
+use rocket::{Catcher, Route};
+
+mod authenticated;
+mod guest;
 
 pub(crate) fn routes() -> Vec<Route> {
-    routes![index, health_check]
+    routes![guest::index, guest::health_check, authenticated::whoami]
 }
 
 pub(crate) fn catchers() -> Vec<Catcher> {
     catchers![]
-}
-
-#[get("/")]
-fn index() -> &'static str {
-    "Hello, world!"
-}
-
-#[get("/healthz")]
-fn health_check() -> content::Json<&'static str> {
-    content::Json("{\"status\":\"ok\"}")
 }
