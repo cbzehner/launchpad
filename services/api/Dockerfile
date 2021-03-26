@@ -28,8 +28,8 @@ FROM debian:stable-slim as runtime
 USER root
 RUN apt-get update && apt-get -y upgrade
 # The release binary requires libssl.so.1.1 and libcrypto.so.1.1 to be present on the system
-COPY --from=builder /usr/lib/x86_64-linux-gnu/libssl.so.1.1 /usr/lib/x86_64-linux-gnu/libssl.so.1.1
-COPY --from=builder /usr/lib/x86_64-linux-gnu/libcrypto.so.1.1 /usr/lib/x86_64-linux-gnu/libcrypto.so.1.1
+# COPY --from=builder /usr/lib/x86_64-linux-gnu/libssl.so.1.1 /usr/lib/x86_64-linux-gnu/libssl.so.1.1
+# COPY --from=builder /usr/lib/x86_64-linux-gnu/libcrypto.so.1.1 /usr/lib/x86_64-linux-gnu/libcrypto.so.1.1
 RUN adduser application --system --group --no-create-home
 USER application
 COPY --from=builder /build/target/release/api /usr/local/bin
