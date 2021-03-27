@@ -1,9 +1,6 @@
 mod fairings;
 mod handlers;
-mod models;
-
-// TODO: If possible, move this into the tests/ directory.
-pub mod mocks;
+pub mod models;
 
 pub fn server() -> rocket::Rocket {
     rocket::ignite()

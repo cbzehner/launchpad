@@ -1,3 +1,5 @@
+use std::sync::RwLock;
+
 use url::Url;
 
 #[allow(dead_code)]
@@ -5,18 +7,18 @@ mod session;
 
 pub(crate) use session::Session;
 
-#[cfg(test)]
-use crate::mocks;
-
-fn base_url() -> Result<Url, url::ParseError> {
+lazy_static! {
     // TODO: Avoid hard-coding the auth server public URL!
-    let url = Url::parse("http://127.0.0.1:4433");
+    static ref BASE_URL: RwLock<Url> = RwLock::new(Url::parse("http://127.0.0.1:4433").unwrap());
+}
 
-    #[cfg(not(test))]
-    return url;
-    #[cfg(test)]
-    return match mocks::kratos::MOCK_KRATOS_SERVER.read().unwrap().as_ref() {
-        Some(mock_server) => Url::parse(&mock_server.uri()),
-        None => url,
-    };
+fn get_base_url() -> Url {
+    let base_url = BASE_URL.read().unwrap();
+    base_url.clone()
+}
+
+// Exposed to allow tests to change the base_url for the Kratos service.
+pub fn set_base_url(url: Url) {
+    let mut base_url = BASE_URL.write().unwrap();
+    *base_url = url;
 }

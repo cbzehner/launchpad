@@ -1,10 +1,11 @@
 use bear::fixture;
 use rocket::http::{Cookie, Status};
 use rocket::local::asynchronous::Client;
+use url::Url;
 use wiremock::matchers::any;
 use wiremock::{Mock, MockServer, ResponseTemplate};
 
-use api::mocks::kratos::MOCK_KRATOS_SERVER;
+use api::models::kratos;
 use api::server;
 
 #[tokio::test]
@@ -34,6 +35,8 @@ async fn whoami_missing_cookie() {
         response.into_string().await,
         Some("{\"id\":\"53354449-9e03-40fc-bc90-fc499e6d44e3\",\"email\":\"cbzehner@test.com\",\"full_name\":\"Christopher Zehner\",\"preferred_name\":\"Chris\"}".into())
     );
+
+    drop(_mock_server);
 }
 
 #[tokio::test]
@@ -55,6 +58,8 @@ async fn whoami_session_inactive() {
         response.into_string().await,
         Some("{\"id\":\"53354449-9e03-40fc-bc90-fc499e6d44e3\",\"email\":\"cbzehner@test.com\",\"full_name\":\"Christopher Zehner\",\"preferred_name\":\"Chris\"}".into())
     );
+
+    drop(_mock_server);
 }
 
 #[tokio::test]
@@ -76,18 +81,19 @@ async fn whoami_session_expired() {
         response.into_string().await,
         Some("{\"id\":\"53354449-9e03-40fc-bc90-fc499e6d44e3\",\"email\":\"cbzehner@test.com\",\"full_name\":\"Christopher Zehner\",\"preferred_name\":\"Chris\"}".into())
     );
+
+    drop(_mock_server);
 }
 
-/// Mock the ORY Kratos service on a specific port of the localhost.
+/// Mock the ORY Kratos service.
 async fn mock_kratos(status: Status, body: &str, expect: wiremock::Times) -> MockServer {
-    // TODO: Use an environment variable to compute this value.
-    let listener = std::net::TcpListener::bind("127.0.0.1:4433").unwrap();
-    let mock_server = MockServer::builder().listener(listener).start().await;
+    let mock_server = MockServer::start().await;
     Mock::given(any())
         .respond_with(ResponseTemplate::new(status.code).set_body_string(body))
         .expect(expect)
         .mount(&mock_server)
         .await;
+    kratos::set_base_url(Url::parse(&mock_server.uri()).unwrap());
 
     mock_server
 }

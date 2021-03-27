@@ -83,7 +83,7 @@ impl<'r> Session {
         // TODO: Move client into Rocket State
         let session = reqwest::Client::new()
             // TODO: Avoid unwrap by passing the error upwards with `?`
-            .get(super::base_url().unwrap().join("/sessions/whoami").unwrap())
+            .get(super::get_base_url().join("/sessions/whoami").unwrap())
             .header("Cookie", format!("{}", cookie))
             .send()
             .await?
