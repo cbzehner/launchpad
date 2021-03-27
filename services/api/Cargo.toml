@@ -22,4 +22,5 @@ features = ["secrets", "tls"]
 
 [dev-dependencies]
 bear = "0.2"
+lazy_static = "1.4"
 wiremock = "0.5"

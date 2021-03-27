@@ -82,8 +82,8 @@ impl<'r> Session {
     async fn validate(cookie: &Cookie<'r>) -> Result<Self, reqwest::Error> {
         // TODO: Move client into Rocket State
         let session = reqwest::Client::new()
-            // TODO: Avoid hard-coding the auth server public URL!
-            .get("http://127.0.0.1:4433/sessions/whoami")
+            // TODO: Avoid unwrap by passing the error upwards with `?`
+            .get(super::base_url().unwrap().join("/sessions/whoami").unwrap())
             .header("Cookie", format!("{}", cookie))
             .send()
             .await?

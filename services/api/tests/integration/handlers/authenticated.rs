@@ -4,6 +4,7 @@ use rocket::local::asynchronous::Client;
 use wiremock::matchers::any;
 use wiremock::{Mock, MockServer, ResponseTemplate};
 
+use api::mocks::kratos::MOCK_KRATOS_SERVER;
 use api::server;
 
 #[tokio::test]
