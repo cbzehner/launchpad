@@ -19,6 +19,9 @@ run:
 test:
   cargo test -- --test-threads=1
 
+unit:
+  cargo test --lib
+
 integration:
   cargo test --test integration -- --test-threads=1
 
