@@ -4,9 +4,9 @@ mod authenticated;
 mod guest;
 
 pub(crate) fn routes() -> Vec<Route> {
-    routes![guest::index, guest::health_check, authenticated::whoami]
+    rocket::routes![guest::index, guest::health_check, authenticated::whoami]
 }
 
 pub(crate) fn catchers() -> Vec<Catcher> {
-    catchers![]
+    rocket::catchers![]
 }

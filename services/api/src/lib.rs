@@ -1,6 +1,3 @@
-#[macro_use]
-extern crate rocket;
-
 mod fairings;
 mod handlers;
 mod models;

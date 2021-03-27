@@ -28,7 +28,7 @@ impl<'r> FromRequest<'r> for User {
     type Error = String; // TODO: Better error handling?
 
     async fn from_request(req: &'r Request<'_>) -> request::Outcome<Self, Self::Error> {
-        let session = try_outcome!(req.guard::<kratos::Session>().await);
+        let session = rocket::try_outcome!(req.guard::<kratos::Session>().await);
         Outcome::Success(session.into())
     }
 }
