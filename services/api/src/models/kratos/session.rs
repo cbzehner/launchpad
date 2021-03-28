@@ -3,9 +3,12 @@ use email_address::EmailAddress;
 use rocket::{
     http::{Cookie, Status},
     request::{FromRequest, Outcome, Request},
+    try_outcome, State,
 };
 use url::Url;
 use uuid::Uuid;
+
+use crate::clients::KratosClient;
 
 const SESSION_COOKIE_NAME: &str = "ory_kratos_session";
 
@@ -79,11 +82,11 @@ pub(crate) struct RecoveryAddress {
 
 impl<'r> Session {
     // TODO: Write a test mocking the value returned by reqwest (including invalid values)
-    async fn validate(cookie: &Cookie<'r>) -> Result<Self, reqwest::Error> {
+    async fn validate(kratos_url: Url, cookie: &Cookie<'r>) -> Result<Self, reqwest::Error> {
         // TODO: Move client into Rocket State
         let session = reqwest::Client::new()
             // TODO: Avoid hard-coding the auth server public URL!
-            .get("http://127.0.0.1:4433/sessions/whoami")
+            .get(kratos_url.join("sessions/whoami").unwrap())
             .header("Cookie", format!("{}", cookie))
             .send()
             .await?
@@ -96,7 +99,9 @@ impl<'r> Session {
 
 #[rocket::async_trait]
 impl<'r> FromRequest<'r> for Session {
-    type Error = String; // TODO: Better error handling
+    // TODO: Convert errors back to something meaningful
+    // type Error = String; // TODO: Better error handling
+    type Error = ();
 
     // TODO: Use `local_cache_async` to cache session guard executions...
     async fn from_request(req: &'r Request<'_>) -> Outcome<Self, Self::Error> {
@@ -106,23 +111,37 @@ impl<'r> FromRequest<'r> for Session {
             None => {
                 return Outcome::Failure((
                     Status::Unauthorized,
-                    "No session cookie provided".into(),
-                ))
+                    (), // "No session cookie provided".into(),
+                ));
             }
         };
 
+        let state: State<KratosClient> = try_outcome!(req.guard::<State<KratosClient>>().await);
+        // TODO: Clean this up!
+        let kratos_url = (*state.inner()).clone();
         // Confirm the session against the authentication server.
-        let session = match Session::validate(cookie).await {
+        let session = match Session::validate(kratos_url, cookie).await {
             Ok(session) => session,
-            Err(err) => return Outcome::Failure((Status::InternalServerError, err.to_string())),
+            Err(_err) => {
+                return Outcome::Failure((
+                    Status::InternalServerError,
+                    (), /* err.to_string() */
+                ));
+            }
         };
 
         if !session.active {
-            return Outcome::Failure((Status::Unauthorized, "Inactive session".into()));
+            return Outcome::Failure((
+                Status::Unauthorized,
+                (), /* "Inactive session".into() */
+            ));
         }
 
         if session.expires_at < Utc::now() {
-            return Outcome::Failure((Status::Unauthorized, "Expired session".into()));
+            return Outcome::Failure((
+                Status::Unauthorized,
+                (), /* "Expired session".into() */
+            ));
         }
 
         Outcome::Success(session)

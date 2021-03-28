@@ -17,13 +17,13 @@ run:
   cargo run --bin api
 
 test:
-  cargo test -- --test-threads=1
+  just unit integration
 
 unit:
   cargo test --lib
 
 integration:
-  cargo test --test integration -- --test-threads=1
+  cargo test --test integration
 
 watch:
   cargo watch

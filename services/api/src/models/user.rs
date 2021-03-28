@@ -1,5 +1,8 @@
 use email_address::EmailAddress;
-use rocket::request::{self, FromRequest, Outcome, Request};
+use rocket::{
+    request::{self, FromRequest, Outcome, Request},
+    try_outcome,
+};
 use uuid::Uuid;
 
 use super::kratos;
@@ -25,10 +28,10 @@ impl From<kratos::Session> for User {
 
 #[rocket::async_trait]
 impl<'r> FromRequest<'r> for User {
-    type Error = String; // TODO: Better error handling?
+    type Error = (); // TODO: Better error handling?
 
     async fn from_request(req: &'r Request<'_>) -> request::Outcome<Self, Self::Error> {
-        let session = rocket::try_outcome!(req.guard::<kratos::Session>().await);
+        let session = try_outcome!(req.guard::<kratos::Session>().await);
         Outcome::Success(session.into())
     }
 }
