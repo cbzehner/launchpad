@@ -5,7 +5,9 @@ use rocket::{
 };
 use uuid::Uuid;
 
-use super::kratos;
+use crate::db::Postgres;
+
+use super::{kratos, AppSettings};
 
 #[derive(Debug, PartialEq, serde::Serialize, serde::Deserialize)]
 pub(crate) struct User {
@@ -13,6 +15,19 @@ pub(crate) struct User {
     pub(crate) email: EmailAddress,
     pub(crate) full_name: String,
     pub(crate) preferred_name: String,
+}
+
+impl User {
+    /// Load the AppSettings for a user from the database.
+    pub(crate) async fn load_app_settings(&self, conn: &Postgres) -> Result<AppSettings, ()> {
+        match AppSettings::from_user(self.id, conn).await {
+            Ok(app_settings) => Ok(app_settings),
+            Err(err) => {
+                eprintln!("{}", err.to_string());
+                Err(())
+            }
+        }
+    }
 }
 
 impl From<kratos::Session> for User {

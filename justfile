@@ -17,7 +17,7 @@ launch:
 # Take down all running launchpad services, including database volumes
 crash:
   @echo 'Blast that piece of junk out of the sky!'
-  docker-compose --file ./infrastructure/docker/docker-compose.base.yaml --file ./infrastructure/docker/docker-compose.local.yaml --project-dir . down --volumes
+  docker-compose --file ./infrastructure/docker/docker-compose.base.yaml --file ./infrastructure/docker/docker-compose.local.yaml --project-dir . down
 
 # Open the local version of the app
 app:

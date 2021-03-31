@@ -4,7 +4,14 @@
 1. ~~Use dotenv instead of hard-coded secret values.~~
 1. ~~Setup authentication verification with Kratos auth service.~~
 1. ~~Write a test verifying protected routes.~~
-1. Simple integration with Postgres & sqlx as an example.
+1. Correctly implement Rocket config using Figment.
+1. Simple integration with Postgres & diesel as an example.
+  - ~~Setup Postgres & Diesel~~
+  - ~~Construct a simple generic model (AppSettings)~~
+  - Update test suite to continue to work as expected. Check for race conditions in test runs (ideal case: allow race conditions if tests all pass for better production veracity).
+1. Convert error handling to something more robust. Either Eyre or Anyhow. Bears further investigation.
+1. Create some sort of "lint" or test ensuring that migrations are reversible. (CI? Script? Commit hook?)
+1. Write conditional logic panicing if the localhost database password "secret" is detected in --release runs
 1. Default all routes to Protected and write a "Guest" data guard to opt-routes from this behavior.
 
 ## services

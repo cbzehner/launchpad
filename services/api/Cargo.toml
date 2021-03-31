@@ -8,17 +8,27 @@ edition = "2018"
 chrono = { version = "0.4", features = ["serde"] }
 email_address = "0.2"
 reqwest = { version = "0.11", default-features = false, features = ["json", "rustls-tls"] }
-rocket_contrib = { git =  "https://github.com/SergioBenitez/Rocket", version = "0.5.0-dev"}
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 tokio = { version = "1", features = ["full"] }
 url = { version = "2.2", features = ["serde"] }
-uuid = { version = "0.8", features = ["serde"] }
+uuid = { version = "0.8", features = ["v4", "serde"] }
+diesel_migrations = "1.4"
+
+[dependencies.diesel]
+version = "1.4"
+features = ["chrono", "postgres", "uuidv07"]
 
 [dependencies.rocket]
 git = "https://github.com/SergioBenitez/Rocket"
 version = "0.5.0-dev"
 features = ["secrets", "tls"]
+
+[dependencies.rocket_contrib]
+git = "https://github.com/SergioBenitez/Rocket"
+version = "0.5.0-dev"
+default-features = false
+features = ["diesel_postgres_pool"]
 
 [dev-dependencies]
 bear = "0.2"
