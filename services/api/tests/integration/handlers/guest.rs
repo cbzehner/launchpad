@@ -1,20 +1,23 @@
 use rocket::http::Status;
-use rocket::local::blocking::Client;
+use rocket::local::asynchronous::Client;
 
 use api::server;
 
-#[test]
-fn index() {
-    let client = Client::tracked(server(None)).unwrap();
-    let response = client.get("/").dispatch();
+#[tokio::test]
+async fn index() {
+    let client = Client::tracked(server(None, None)).await.unwrap();
+    let response = client.get("/").dispatch().await;
     assert_eq!(response.status(), Status::Ok);
-    assert_eq!(response.into_string(), Some("Hello, world!".into()));
+    assert_eq!(response.into_string().await, Some("Hello, world!".into()));
 }
 
-#[test]
-fn health_check() {
-    let client = Client::tracked(server(None)).unwrap();
-    let response = client.get("/healthz").dispatch();
+#[tokio::test]
+async fn health_check() {
+    let client = Client::tracked(server(None, None)).await.unwrap();
+    let response = client.get("/healthz").dispatch().await;
     assert_eq!(response.status(), Status::Ok);
-    assert_eq!(response.into_string(), Some("{\"status\":\"ok\"}".into()));
+    assert_eq!(
+        response.into_string().await,
+        Some("{\"status\":\"ok\"}".into())
+    );
 }

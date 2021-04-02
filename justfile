@@ -12,7 +12,7 @@ launch:
   @echo 'Main engine starting...'
   @for i in $(seq 10 -1 1); do echo 'T-Minus: '$i'...' && sleep 1; done
   @echo 'Liftoff!'
-  docker-compose --file ./infrastructure/docker/docker-compose.base.yaml --file ./infrastructure/docker/docker-compose.local.yaml --project-dir . up --remove-orphans
+  docker-compose --file ./infrastructure/docker/docker-compose.base.yaml --file ./infrastructure/docker/docker-compose.local.yaml --project-dir . up --remove-orphans --build
 
 # Take down all running launchpad services, including database volumes
 crash:

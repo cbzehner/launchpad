@@ -1,1 +1,2 @@
-.data/
+.data/postgres-data/*
+.DS_Store

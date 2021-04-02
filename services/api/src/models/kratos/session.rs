@@ -8,7 +8,7 @@ use rocket::{
 use url::Url;
 use uuid::Uuid;
 
-use crate::clients::KratosClient;
+use crate::configs::KratosClient;
 
 const SESSION_COOKIE_NAME: &str = "ory_kratos_session";
 

@@ -3,7 +3,7 @@ use rocket::response::content;
 use crate::models::User;
 
 #[rocket::get("/whoami")]
-pub(crate) fn whoami(user: User) -> Result<content::Json<String>, String> {
+pub(crate) async fn whoami(user: User) -> Result<content::Json<String>, String> {
     let json_value = serde_json::to_string(&user);
 
     match json_value {

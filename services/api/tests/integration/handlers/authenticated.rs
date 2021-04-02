@@ -12,7 +12,7 @@ async fn whoami() {
     let kratos_mock = mock_kratos(Status::Ok, &fixture("kratos/session.json"), 1.into()).await;
     let kratos_url = Url::parse(&kratos_mock.uri()).unwrap();
 
-    let client = Client::tracked(server(kratos_url)).await.unwrap();
+    let client = Client::tracked(server(kratos_url, None)).await.unwrap();
     let response = client
         .get("/whoami")
         .cookie(Cookie::new("ory_kratos_session", "MTYxNjM1ODg2NXxEdi1CQkFFQ180SUFBUkFCRUFBQVJfLUNBQUVHYzNSeWFXNW5EQThBRFhObGMzTnBiMjVmZEc5clpXNEdjM1J5YVc1bkRDSUFJRkE0T1VwaFUzVm5UMlpUYmt4TU1rSktPVkExYkVkWmQyRkRjVmhQWjJKbXyKNqk1ax4XXUA9kcc67NA_KYYFw5CNOczCpIaegt7fTQ=="))
@@ -29,7 +29,7 @@ async fn whoami_missing_cookie() {
     let kratos_mock = mock_kratos(Status::Ok, &fixture("kratos/session.json"), 0.into()).await;
     let kratos_url = Url::parse(&kratos_mock.uri()).unwrap();
 
-    let client = Client::tracked(server(kratos_url)).await.unwrap();
+    let client = Client::tracked(server(kratos_url, None)).await.unwrap();
     let response = client.get("/whoami").dispatch().await;
     assert_eq!(response.status(), Status::Unauthorized);
     assert_ne!(
@@ -48,7 +48,7 @@ async fn whoami_session_inactive() {
     .await;
     let kratos_url = Url::parse(&kratos_mock.uri()).unwrap();
 
-    let client = Client::tracked(server(kratos_url)).await.unwrap();
+    let client = Client::tracked(server(kratos_url, None)).await.unwrap();
     let response = client
         .get("/whoami")
         .cookie(Cookie::new("ory_kratos_session", "MTYxNjM1ODg2NXxEdi1CQkFFQ180SUFBUkFCRUFBQVJfLUNBQUVHYzNSeWFXNW5EQThBRFhObGMzTnBiMjVmZEc5clpXNEdjM1J5YVc1bkRDSUFJRkE0T1VwaFUzVm5UMlpUYmt4TU1rSktPVkExYkVkWmQyRkRjVmhQWjJKbXyKNqk1ax4XXUA9kcc67NA_KYYFw5CNOczCpIaegt7fTQ=="))
@@ -70,7 +70,7 @@ async fn whoami_session_expired() {
     .await;
     let kratos_url = Url::parse(&kratos_mock.uri()).unwrap();
 
-    let client = Client::tracked(server(kratos_url)).await.unwrap();
+    let client = Client::tracked(server(kratos_url, None)).await.unwrap();
     let response = client
         .get("/whoami")
         .cookie(Cookie::new("ory_kratos_session", "MTYxNjM1ODg2NXxEdi1CQkFFQ180SUFBUkFCRUFBQVJfLUNBQUVHYzNSeWFXNW5EQThBRFhObGMzTnBiMjVmZEc5clpXNEdjM1J5YVc1bkRDSUFJRkE0T1VwaFUzVm5UMlpUYmt4TU1rSktPVkExYkVkWmQyRkRjVmhQWjJKbXyKNqk1ax4XXUA9kcc67NA_KYYFw5CNOczCpIaegt7fTQ=="))

@@ -4,7 +4,7 @@
 1. ~~Use dotenv instead of hard-coded secret values.~~
 1. ~~Setup authentication verification with Kratos auth service.~~
 1. ~~Write a test verifying protected routes.~~
-1. Correctly implement Rocket config using Figment.
+1. ~~Correctly implement Rocket config using Figment.~~
 1. Simple integration with Postgres & diesel as an example.
   - ~~Setup Postgres & Diesel~~
   - ~~Construct a simple generic model (AppSettings)~~

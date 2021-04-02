@@ -1,4 +1,4 @@
 #[rocket::launch]
 fn launch() -> rocket::Rocket {
-    api::server(None)
+    api::server(None, None)
 }

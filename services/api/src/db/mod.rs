@@ -1,7 +1,7 @@
-use rocket_contrib::databases;
+use rocket_contrib::databases::{database, diesel::PgConnection};
 
 pub(crate) mod initialize;
 pub(crate) mod schema;
 
-#[rocket_contrib::database("postgres")]
-pub(crate) struct Postgres(databases::diesel::PgConnection);
+#[database("postgres")]
+pub(crate) struct Postgres(PgConnection);

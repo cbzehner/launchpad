@@ -23,7 +23,7 @@ unit:
   cargo test --lib
 
 integration:
-  cargo test --test integration
-
+  cargo test --test integration -- --test-threads=1
+  
 watch:
   cargo watch
