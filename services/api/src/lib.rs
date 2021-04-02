@@ -31,5 +31,5 @@ pub fn server(
         ))
         .manage(KratosClient::new(kratos_url))
         .mount("/", handlers::routes())
-        .register(handlers::catchers())
+        .register("/", handlers::catchers())
 }
