@@ -24,6 +24,18 @@ unit:
 
 integration:
   cargo test --test integration -- --test-threads=1
+
+verify:
+  just _format _lint _compile
+
+_format:
+  cargo fmt -- --check
+
+_lint:
+  cargo clippy
+
+_compile:
+  cargo check
   
 watch:
   cargo watch

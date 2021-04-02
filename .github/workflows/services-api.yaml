@@ -1,0 +1,192 @@
+name: API
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+    paths:
+      - .github/workflows/services-api.yaml
+      - services/api/**
+
+env:
+  CARGO_TERM_COLOR: always
+  RUSTC_WRAPPER: sccache
+  SCCACHE_CACHE_SIZE: 300M
+  SCCACHE_DIR: /home/runner/.cache/sccache
+  SCCACHE_IDLE_TIMEOUT: 0
+
+defaults:
+  run:
+    working-directory: services/api
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install sccache
+        env:
+          LINK: https://github.com/mozilla/sccache/releases/download
+          SCCACHE_VERSION: 0.2.15
+        run: |
+          SCCACHE_FILE=sccache-v$SCCACHE_VERSION-x86_64-unknown-linux-musl
+          mkdir -p $HOME/.local/bin
+          curl -L "$LINK/v$SCCACHE_VERSION/$SCCACHE_FILE.tar.gz" | tar xz
+          chmod +x $SCCACHE_FILE/sccache
+          mv -f $SCCACHE_FILE/sccache $HOME/.local/bin/sccache
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+      - name: Cache cargo registry
+        uses: actions/cache@v2
+        continue-on-error: true
+        with:
+            path: ~/.cargo/registry/cache
+            key: ${{ runner.os }}-cargo-registry-${{ hashFiles('**/Cargo.lock') }}
+            restore-keys: |
+                ${{ runner.os }}-cargo-registry-
+      - name: Cache sccache output
+        uses: actions/cache@v2
+        continue-on-error: true
+        with:
+            path: /home/runner/.cache/sccache
+            key: ${{ runner.os }}-sccache-${{ hashFiles('**/Cargo.*') }}
+            restore-keys: |
+                ${{ runner.os }}-sccache-
+      - name: Start sccache server
+        run: sccache --start-server
+
+      - name: Install Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          components: rustfmt, clippy
+
+      - uses: extractions/setup-just@v1
+      
+      - name: Verify formatting and compilation succeeds
+        run: just verify
+
+      - name: Stop sccache server
+        run: sccache --stop-server
+
+  unit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install sccache
+        env:
+          LINK: https://github.com/mozilla/sccache/releases/download
+          SCCACHE_VERSION: 0.2.15
+        run: |
+          SCCACHE_FILE=sccache-v$SCCACHE_VERSION-x86_64-unknown-linux-musl
+          mkdir -p $HOME/.local/bin
+          curl -L "$LINK/v$SCCACHE_VERSION/$SCCACHE_FILE.tar.gz" | tar xz
+          chmod +x $SCCACHE_FILE/sccache
+          mv -f $SCCACHE_FILE/sccache $HOME/.local/bin/sccache
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+      - name: Cache cargo registry
+        uses: actions/cache@v2
+        continue-on-error: true
+        with:
+            path: ~/.cargo/registry/cache
+            key: ${{ runner.os }}-cargo-registry-${{ hashFiles('**/Cargo.lock') }}
+            restore-keys: |
+                ${{ runner.os }}-cargo-registry-
+      - name: Cache sccache output
+        uses: actions/cache@v2
+        continue-on-error: true
+        with:
+            path: /home/runner/.cache/sccache
+            key: ${{ runner.os }}-sccache-${{ hashFiles('**/Cargo.*') }}
+            restore-keys: |
+                ${{ runner.os }}-sccache-
+      - name: Start sccache server
+        run: sccache --start-server
+
+      - name: Install Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          components: rustfmt, clippy
+
+      - uses: extractions/setup-just@v1
+
+      - name: Run unit tests
+        run: just unit
+
+      - name: Stop sccache server
+        run: sccache --stop-server
+
+  integration:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_USER: api
+          POSTGRES_DB: api_test
+          POSTGRES_PASSWORD: secret
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install sccache
+        env:
+          LINK: https://github.com/mozilla/sccache/releases/download
+          SCCACHE_VERSION: 0.2.15
+        run: |
+          SCCACHE_FILE=sccache-v$SCCACHE_VERSION-x86_64-unknown-linux-musl
+          mkdir -p $HOME/.local/bin
+          curl -L "$LINK/v$SCCACHE_VERSION/$SCCACHE_FILE.tar.gz" | tar xz
+          chmod +x $SCCACHE_FILE/sccache
+          mv -f $SCCACHE_FILE/sccache $HOME/.local/bin/sccache
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+      - name: Cache cargo registry
+        uses: actions/cache@v2
+        continue-on-error: true
+        with:
+            path: ~/.cargo/registry/cache
+            key: ${{ runner.os }}-cargo-registry-${{ hashFiles('**/Cargo.lock') }}
+            restore-keys: |
+                ${{ runner.os }}-cargo-registry-
+      - name: Cache sccache output
+        uses: actions/cache@v2
+        continue-on-error: true
+        with:
+            path: /home/runner/.cache/sccache
+            key: ${{ runner.os }}-sccache-${{ hashFiles('**/Cargo.*') }}
+            restore-keys: |
+                ${{ runner.os }}-sccache-
+      - name: Start sccache server
+        run: sccache --start-server
+
+      - name: Install Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          components: rustfmt, clippy
+
+      - uses: extractions/setup-just@v1
+
+      - name: Run integration tests
+        run: just integration
+        env:
+          POSTGRES_URL: postgres://api:secret@localhost:5432/api_test
+
+      - name: Stop sccache server
+        run: sccache --stop-server
