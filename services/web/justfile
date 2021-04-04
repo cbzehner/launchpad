@@ -24,3 +24,15 @@ test:
 
 watch:
   yarn start
+
+verify:
+  just _format _lint _compile
+
+_format:
+  yarn format --check
+
+_lint:
+  yarn lint
+
+_compile:
+  yarn tsc --pretty

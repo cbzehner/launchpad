@@ -21,7 +21,7 @@ defaults:
     working-directory: services/api
 
 jobs:
-  verify:
+  verify-api:
     runs-on: ubuntu-latest
 
     steps:
@@ -72,7 +72,7 @@ jobs:
       - name: Stop sccache server
         run: sccache --stop-server
 
-  unit:
+  unit-api:
     runs-on: ubuntu-latest
 
     steps:
@@ -123,7 +123,7 @@ jobs:
       - name: Stop sccache server
         run: sccache --stop-server
 
-  integration:
+  integration-api:
     runs-on: ubuntu-latest
 
     services:
