@@ -26,6 +26,7 @@
 #### postgres
 1. ~~Store Kratos data in Postgres rather than SQLite.~~
 1. Change default password for ROLE `kratos` in `init-db.sql`.
+1. Store Kratos as a schema on the API database rather than an entirely separate database.
 1. Periodically backup the Postgres database to a remote service. [Hint](https://davejansen.com/how-to-set-up-and-use-postgres-using-docker/)
 1. Investigate having a `login` role rather than exposing LOGIN to `kratos` and `api` roles.
 

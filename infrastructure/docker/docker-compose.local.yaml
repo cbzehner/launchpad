@@ -1,4 +1,53 @@
+version: "3.7"
+
 services:
+  postgres-database:
+    env_file:
+      - ./services/data/postgres/env.local
+
+  kratos-migrate:
+    env_file:
+      - ./services/auth/kratos/local/env.local
+    volumes:
+      - type: bind
+        source: ./services/auth/kratos/local
+        target: /etc/config/kratos
+
+  kratos:
+    command: serve -c /etc/config/kratos/kratos.yml --dev
+    env_file:
+      - ./services/auth/kratos/local/env.local
+    volumes:
+      - type: bind
+        source: ./services/auth/kratos/local
+        target: /etc/config/kratos
+
+  oathkeeper:
+    env_file:
+      - ./services/auth/oathkeeper/local/env.local
+    volumes:
+      - type: bind
+        source: ./services/auth/oathkeeper/local
+        target: /etc/config/oathkeeper
+
+  web:
+    image: "node:lts-slim"
+    command: ["yarn", "start"]
+    env_file:
+      - ./services/web/env.local
+    environment:
+      - PATH=/srv/node_modules/.bin:$PATH
+      - PORT=4435
+    stdin_open: true
+    user: "node:node"
+    volumes:
+      - "./services/web:/srv:delegated"
+    working_dir: "/srv"
+
+  api:
+    env_file:
+      - ./services/api/env.local
+
   mailslurper:
     image: oryd/mailslurper:latest-smtps
     networks:
