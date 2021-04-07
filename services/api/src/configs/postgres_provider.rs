@@ -9,7 +9,13 @@ impl PostgresProvider {
             Some(url) => Self(url),
             None => match env::var("POSTGRES_URL") {
                 Ok(url) => Self(Url::parse(&url).expect("Invalid URL for POSTGRES_URL")),
-                Err(_) => Self::default(),
+                Err(_) => {
+                    if cfg!(not(debug_assertions)) {
+                        panic!("An value must be provided for POSTGRES_URL in release mode.")
+                    } else {
+                        Self::default()
+                    }
+                },
             },
         }
     }
