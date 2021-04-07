@@ -15,7 +15,7 @@ impl PostgresProvider {
                     } else {
                         Self::default()
                     }
-                },
+                }
             },
         }
     }
