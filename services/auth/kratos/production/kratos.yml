@@ -52,9 +52,7 @@ selfservice:
             - hook: session
 
 log:
-  level: debug
-  format: text
-  leak_sensitive_values: true
+  format: json
 
 secrets:
   cookie:

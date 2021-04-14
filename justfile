@@ -15,6 +15,10 @@ launch:
   @cat .rocket.txt
   docker-compose --file ./infrastructure/docker/docker-compose.base.yaml --file ./infrastructure/docker/docker-compose.local.yaml --project-dir . up --remove-orphans --build
 
+deploy:
+  # sh ./infrastructure/deployment/deploy-machine.sh
+  docker-compose --file ./infrastructure/docker/docker-compose.base.yaml --file ./infrastructure/docker/docker-compose.production.yaml --project-dir . up --remove-orphans
+
 # Take down all running launchpad services, including database volumes
 crash:
   @echo 'Blast that piece of junk out of the sky!'

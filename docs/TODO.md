@@ -35,16 +35,17 @@
 1. ~~Use dotenv instead of hard-coded secret values in Docker.~~
 1. ~~Create a `deployments/containers/` folder and set up a `just` command for running `docker-compose up --remove-orphans`.~~
 1. Healthchecks for all services.
-1. Deploy an unhardened "production" instance
+1. ~Deploy an unhardened "production" instance~
 1. Harden production instance.
 1. Periodically [rebuild without caching](https://pythonspeed.com/articles/docker-cache-insecure-images/).
 
 #### ci/cd
 1. ~Set up GitHub actions to run tests for each service, the api and the web client.~
-1. Set up GitHub Action to deploy green builds to production
+1. Set up GitHub Action to deploy green builds to production via a [DO Container Registry](https://docs.digitalocean.com/products/kubernetes/how-to/deploy-using-github-actions/)
 
 ## web
 1. ~~Use dotenv instead of hard-coded secret values.~~
+1. Dockerize the production build to be a built-image running a static file server
 1. Have an actual login experience on the Home page.
 1. Support logout from menu bar.
 1. Allow the user to edit their own identity settings.

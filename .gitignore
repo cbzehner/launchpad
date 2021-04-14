@@ -1,2 +1,3 @@
 .data/postgres-data/*
 .DS_Store
+.env

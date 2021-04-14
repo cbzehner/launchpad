@@ -9,18 +9,7 @@ services:
       retries: 5
       start_period: 10s
       timeout: 5s
-    networks:
-      - intranet
-    ports:
-      - "5432:5432"
     restart: on-failure
-    volumes:
-      - type: bind
-        source: ./.data/postgres-data
-        target: /var/lib/postgresql/data
-      - type: bind
-        source: ./services/data/postgres/init-db.sql
-        target: /docker-entrypoint-initdb.d/init.sql
 
   kratos-migrate:
     image: oryd/kratos:v0.5.5-alpha.1
@@ -28,13 +17,7 @@ services:
     depends_on:
       postgres-database:
         condition: service_healthy
-    networks:
-      - intranet
     restart: on-failure
-    volumes:
-      - type: bind
-        source: ./services/auth/kratos/production
-        target: /etc/config/kratos
 
   kratos:
     image: oryd/kratos:v0.5.5-alpha.1
@@ -48,16 +31,7 @@ services:
     #   retries: 5
     #   start_period: 10s
     #   timeout: 5s
-    networks:
-      - intranet
-    ports:
-      - "4433:4433" # public
-      - "4434:4434" # admin
     restart: unless-stopped
-    volumes:
-      - type: bind
-        source: ./services/auth/kratos/production
-        target: /etc/config/kratos
 
   oathkeeper:
     image: oryd/oathkeeper:v0.38
@@ -71,26 +45,17 @@ services:
     #   retries: 5
     #   start_period: 10s
     #   timeout: 5s
-    networks:
-      - intranet
+    # TODO: Front the whole cluster with Traefik or Nginx and close these ports.
     ports:
       - 4455:4455
       - 4456:4456
     restart: on-failure
-    volumes:
-      - type: bind
-        source: ./services/auth/oathkeeper/production
-        target: /etc/config/oathkeeper
 
   # TODO: Serve the production of the React app from Nginx or similar
   web:
     depends_on:
       kratos:
         condition: service_started #service_healthy
-    networks:
-      - intranet
-    ports:
-      - "4435:4435"
     restart: on-failure
 
   api:
@@ -104,11 +69,4 @@ services:
     #   retries: 5
     #   start_period: 10s
     #   timeout: 5s
-    networks:
-      - intranet
-    ports:
-      - "4438:4438"
     restart: on-failure
-
-networks:
-  intranet:

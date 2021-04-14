@@ -24,7 +24,7 @@ RUN cargo build --release --bin api
 
 FROM debian:stable-slim as runtime
 USER root
-RUN apt-get update && apt-get -y upgrade
+RUN apt-get update && apt-get -y upgrade && update-ca-certificates
 RUN apt-get install -y \
     # Required by diesel_migration.
     libpq-dev
