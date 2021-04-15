@@ -1,4 +1,4 @@
-name: API
+name: API Tests
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
   pull_request:
     branches: [ master ]
     paths:
-      - .github/workflows/services-api.yaml
+      - .github/workflows/api-tests.yaml
       - services/api/**
 
 env:

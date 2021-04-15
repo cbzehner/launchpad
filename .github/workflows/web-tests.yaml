@@ -1,4 +1,4 @@
-name: Web
+name: Web Tests
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
   pull_request:
     branches: [ master ]
     paths:
-      - .github/workflows/services-web.yaml
+      - .github/workflows/web-tests.yaml
       - services/web/**
 
 defaults:

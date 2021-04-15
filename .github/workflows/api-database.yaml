@@ -6,7 +6,7 @@ on:
   pull_request:
     branches: [ master ]
     paths:
-      - .github/workflows/postgres-api.yaml
+      - .github/workflows/api-database.yaml
       - services/api/migrations/**
 
 env:
