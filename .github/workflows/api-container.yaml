@@ -1,0 +1,39 @@
+name: API Container
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+    paths:
+      - .github/workflows/api-container.yaml
+      - services/api/**
+
+env:
+  CARGO_TERM_COLOR: always
+
+defaults:
+  run:
+    working-directory: services/api
+
+jobs:
+  build-container:
+    # Based upon Enable Push-to-Deploy (https://docs.digitalocean.com/products/kubernetes/how-to/deploy-using-github-actions/)
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+
+      - name: Build container image
+        run: docker build -t latest -t registry.digitalocean.com/cbzehner/launchpad:$(echo $GITHUB_SHA | head -c7) .
+
+      - name: Log in to DigitalOcean Container Registry with short-lived credentials
+        run: doctl registry login --expiry-seconds 1200
+
+      - name: Push image to DigitalOcean Container Registry
+        run: docker push registry.digitalocean.com/cbzehner/launchpad:$(echo $GITHUB_SHA | head -c7)
