@@ -1,4 +1,5 @@
 FROM rust:slim AS rust
+RUN apt-get update && apt-get install -y libpq-dev
 
 FROM rust AS planner
 WORKDIR /plan
@@ -26,8 +27,8 @@ RUN cargo build --release --bin api
 
 FROM debian:stable-slim AS runtime
 USER root
-RUN apt-get update && apt-get -y upgrade
-RUN apt-get install -y \
+RUN apt-get update && apt-get -y upgrade\
+    && apt-get install -y \
     # Required by diesel_migration.
     libpq-dev \
     ca-certificates \
