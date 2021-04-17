@@ -48,8 +48,6 @@ services:
       dockerfile: Dockerfile.dev
     env_file:
       - ./services/web/env.local
-    environment:
-      - PORT=4435
     ports:
       - "4435:4435"
 

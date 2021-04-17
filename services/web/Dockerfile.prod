@@ -9,4 +9,5 @@ COPY . .
 RUN yarn build
 
 FROM nginx AS runtime
+COPY ./.nginx/site.template /etc/nginx/conf.d/site.template
 COPY --from=builder /build/build /usr/share/nginx/html
