@@ -53,3 +53,57 @@ jobs:
         run: just initialize
       - name: Verify formatting and compilation succeeds
         run: just test
+
+  build-container:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Metadata
+        id: meta
+        uses: crazy-max/ghaction-docker-meta@v2
+        with:
+          images: ghcr.io/${{ github.repository_owner }}/launchpad/web
+          tags: |
+            type=ref,event=tag
+            type=sha
+          # TODO: Get `latest` tag working!?!
+          flavor: |
+            latest=true
+          labels: |
+            org.opencontainers.image.title=Launchpad Web
+      # Required for the buildx cache export feature to be enabled.
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Cache Docker layers
+        uses: actions/cache@v2
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-web-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-web-
+      - name: Login to GitHub Container Registry
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v1 
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          context: services/web
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          # TODO: Enable this in the future
+          # cache-from: type=gha
+          # cache-to: type=gha
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new
+      # Temp fix
+      # https://github.com/docker/build-push-action/issues/252
+      # https://github.com/moby/buildkit/issues/1896
+      - name: Move cache
+        run: |
+          rm -rf /tmp/.buildx-cache
+          mv /tmp/.buildx-cache-new /tmp/.buildx-cache

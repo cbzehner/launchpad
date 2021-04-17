@@ -1,0 +1,12 @@
+FROM nginx:stable AS nginx
+RUN apt-get update && apt-get install -y ca-certificates && update-ca-certificates
+
+FROM node:lts-buster-slim AS builder
+WORKDIR /build
+COPY package.json yarn.lock ./
+RUN yarn install --frozen-lockfile
+COPY . .
+RUN yarn build
+
+FROM nginx AS runtime
+COPY --from=builder /build/build /usr/share/nginx/html
