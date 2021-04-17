@@ -1,4 +1,4 @@
-name: Web Tests
+name: Web
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
   pull_request:
     branches: [ master ]
     paths:
-      - .github/workflows/web-tests.yaml
+      - .github/workflows/services-web.yaml
       - services/web/**
 
 defaults:
@@ -14,11 +14,10 @@ defaults:
     working-directory: services/web
 
 jobs:
-  verify-web:
+  verify:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "::set-output name=dir::$(yarn cache dir)"
@@ -29,19 +28,16 @@ jobs:
           key: ${{ runner.os }}-yarn-${{ hashFiles('services/web/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
-
       - uses: extractions/setup-just@v1
       - name: Initialize dependencies
         run: just initialize
-
       - name: Verify formatting and compilation succeeds
         run: just verify
 
-  unit-web:
+  unit-tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "::set-output name=dir::$(yarn cache dir)"
@@ -52,10 +48,8 @@ jobs:
           key: ${{ runner.os }}-yarn-${{ hashFiles('services/web/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
-
       - uses: extractions/setup-just@v1
       - name: Initialize dependencies
         run: just initialize
-
       - name: Verify formatting and compilation succeeds
         run: just test

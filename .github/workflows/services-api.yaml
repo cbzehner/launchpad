@@ -1,4 +1,4 @@
-name: API Tests
+name: API
 
 on:
   push:
@@ -6,27 +6,28 @@ on:
   pull_request:
     branches: [ master ]
     paths:
-      - .github/workflows/api-tests.yaml
+      - .github/workflows/services-api.yaml
       - services/api/**
 
 env:
   CARGO_TERM_COLOR: always
-  RUSTC_WRAPPER: sccache
-  SCCACHE_CACHE_SIZE: 300M
-  SCCACHE_DIR: /home/runner/.cache/sccache
-  SCCACHE_IDLE_TIMEOUT: 0
+  DATABASE_URL: postgres://api:secret@localhost:5432/api_test
+
 
 defaults:
   run:
     working-directory: services/api
 
 jobs:
-  verify-api:
+  verify:
     runs-on: ubuntu-latest
-
+    env:
+      RUSTC_WRAPPER: sccache
+      SCCACHE_CACHE_SIZE: 300M
+      SCCACHE_DIR: /home/runner/.cache/sccache
+      SCCACHE_IDLE_TIMEOUT: 0
     steps:
       - uses: actions/checkout@v2
-
       - name: Install sccache
         env:
           LINK: https://github.com/mozilla/sccache/releases/download
@@ -56,28 +57,27 @@ jobs:
                 ${{ runner.os }}-sccache-
       - name: Start sccache server
         run: sccache --start-server
-
       - name: Install Rust toolchain
         uses: actions-rs/toolchain@v1
         with:
           profile: minimal
           toolchain: stable
           components: rustfmt, clippy
-
       - uses: extractions/setup-just@v1
-      
       - name: Verify formatting and compilation succeeds
         run: just verify
-
       - name: Stop sccache server
         run: sccache --stop-server
 
-  unit-api:
+  unit-tests:
     runs-on: ubuntu-latest
-
+    env:
+      RUSTC_WRAPPER: sccache
+      SCCACHE_CACHE_SIZE: 300M
+      SCCACHE_DIR: /home/runner/.cache/sccache
+      SCCACHE_IDLE_TIMEOUT: 0
     steps:
       - uses: actions/checkout@v2
-
       - name: Install sccache
         env:
           LINK: https://github.com/mozilla/sccache/releases/download
@@ -107,25 +107,25 @@ jobs:
                 ${{ runner.os }}-sccache-
       - name: Start sccache server
         run: sccache --start-server
-
       - name: Install Rust toolchain
         uses: actions-rs/toolchain@v1
         with:
           profile: minimal
           toolchain: stable
           components: rustfmt, clippy
-
       - uses: extractions/setup-just@v1
-
       - name: Run unit tests
         run: just unit
-
       - name: Stop sccache server
         run: sccache --stop-server
 
-  integration-api:
+  integration-tests:
     runs-on: ubuntu-latest
-
+    env:
+      RUSTC_WRAPPER: sccache
+      SCCACHE_CACHE_SIZE: 300M
+      SCCACHE_DIR: /home/runner/.cache/sccache
+      SCCACHE_IDLE_TIMEOUT: 0
     services:
       postgres:
         image: postgres
@@ -140,10 +140,8 @@ jobs:
           --health-retries 5
         ports:
           - 5432:5432
-
     steps:
       - uses: actions/checkout@v2
-
       - name: Install sccache
         env:
           LINK: https://github.com/mozilla/sccache/releases/download
@@ -173,20 +171,100 @@ jobs:
                 ${{ runner.os }}-sccache-
       - name: Start sccache server
         run: sccache --start-server
-
       - name: Install Rust toolchain
         uses: actions-rs/toolchain@v1
         with:
           profile: minimal
           toolchain: stable
           components: rustfmt, clippy
-
       - uses: extractions/setup-just@v1
-
       - name: Run integration tests
         run: just integration
         env:
-          POSTGRES_URL: postgres://api:secret@localhost:5432/api_test
-
+          POSTGRES_URL: ${{ env.DATABASE_URL }}
       - name: Stop sccache server
         run: sccache --stop-server
+
+  reversible-migrations:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_USER: api
+          POSTGRES_DB: api_test
+          POSTGRES_PASSWORD: secret
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install diesel-cli binary crate
+        uses: actions-rs/install@v0.1
+        with:
+          crate: diesel_cli
+          version: latest
+          use-tool-cache: true
+      - name: Run all migrations
+        run: diesel migration run
+      # TODO: Handle all Postgres migrations added by Pull Request, not just latest. 
+      - name: Ensure latest migration is reversible
+        run: diesel migration redo
+
+  build-container:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Metadata
+        id: meta
+        uses: crazy-max/ghaction-docker-meta@v2
+        with:
+          images: ghcr.io/${{ github.repository_owner }}/launchpad/api
+          tags: |
+            type=ref,event=tag
+            type=sha
+          # TODO: Get `latest` tag working!?!
+          flavor: |
+            latest=true
+          labels: |
+            org.opencontainers.image.title=Launchpad API
+      # Required for the buildx cache export feature to be enabled.
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Cache Docker layers
+        uses: actions/cache@v2
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+      - name: Login to GitHub Container Registry
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v1 
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          context: services/api
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          # TODO: Enable this in the future
+          # cache-from: type=gha
+          # cache-to: type=gha
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new
+      # Temp fix
+      # https://github.com/docker/build-push-action/issues/252
+      # https://github.com/moby/buildkit/issues/1896
+      - name: Move cache
+        run: |
+          rm -rf /tmp/.buildx-cache
+          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
