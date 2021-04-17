@@ -227,9 +227,8 @@ jobs:
           tags: |
             type=ref,event=tag
             type=sha
-          # TODO: Get `latest` tag working!?!
           flavor: |
-            latest=true
+            latest=${{ github.event_name != 'pull_request' }}
           labels: |
             org.opencontainers.image.title=Launchpad API
       # Required for the buildx cache export feature to be enabled.
