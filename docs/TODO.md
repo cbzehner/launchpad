@@ -45,7 +45,7 @@
 
 ## web
 1. ~~Use dotenv instead of hard-coded secret values.~~
-1. Dockerize the production build to be a built-image running a static file server
+1. ~Dockerize the production build to be a built-image running a static file server~
 1. Have an actual login experience on the Home page.
 1. Support logout from menu bar.
 1. Allow the user to edit their own identity settings.

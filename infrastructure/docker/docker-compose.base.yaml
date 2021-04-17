@@ -51,7 +51,6 @@ services:
       - 4456:4456
     restart: on-failure
 
-  # TODO: Serve the production of the React app from Nginx or similar
   web:
     depends_on:
       kratos:
@@ -59,7 +58,6 @@ services:
     restart: on-failure
 
   api:
-    build: ./services/api/
     depends_on:
       postgres-database:
         condition: service_healthy

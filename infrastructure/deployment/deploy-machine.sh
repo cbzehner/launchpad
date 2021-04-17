@@ -115,6 +115,10 @@ just deploy
 
 ## TODO: Consider running launchpad-blue & launchpad-green and doing blue-green deploys. Where to store active state?
 
+## Clean up dangling resources to prevent Docker cache from exceeding available disk
+docker system prune --all --filter "until=24h" --filter "label!=production"
+# docker volume prune --filter "label!=production"
+
 ## End deploy-machine.sh logic ##
 msg "${RED}Read parameters:${NOFORMAT}"
 msg "- flag: ${flag}"

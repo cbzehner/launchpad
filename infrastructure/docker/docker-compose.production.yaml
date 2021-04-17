@@ -32,22 +32,10 @@ services:
         target: /etc/config/oathkeeper
 
   web:
-    image: "node:lts-slim"
-    command: ["yarn", "start"]
-    env_file:
-      - ./services/web/env.local
-    environment:
-      - PATH=/srv/node_modules/.bin:$PATH
-      - PORT=4435
-    ports:
-      - "4435:4435"
-    stdin_open: true
-    user: "node:node"
-    volumes:
-      - "./services/web:/srv:delegated"
-    working_dir: "/srv"
+    image: ghcr.io/cbzehner/launchpad/web:latest
 
   api:
+    image: ghcr.io/cbzehner/launchpad/api:latest
     env_file:
       - ./services/api/env.local
     ports:

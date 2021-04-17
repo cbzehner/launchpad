@@ -43,22 +43,20 @@ services:
         target: /etc/config/oathkeeper
 
   web:
-    image: "node:lts-slim"
-    command: ["yarn", "start"]
+    build:
+      context: ./services/web/
+      dockerfile: Dockerfile.dev
     env_file:
       - ./services/web/env.local
     environment:
-      - PATH=/srv/node_modules/.bin:$PATH
       - PORT=4435
     ports:
       - "4435:4435"
-    stdin_open: true
-    user: "node:node"
-    volumes:
-      - "./services/web:/srv:delegated"
-    working_dir: "/srv"
 
   api:
+    build:
+      context: ./services/api/
+      dockerfile: Dockerfile.dev
     env_file:
       - ./services/api/env.local
     ports:
