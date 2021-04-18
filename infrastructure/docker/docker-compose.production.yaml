@@ -5,12 +5,15 @@ services:
     environment:
       - POSTGRES_PASSWORD=POSTGRES_USER_PASSWORD
     volumes:
-      # Make this volume permanent (How?)
+      # # Make this volume permanent (How?)
+      # - type: bind
+      #   source: /launchpad/postgres-data
+      #   target: /var/lib/postgresql/data
       - type: bind
-        source: /launchpad/postgres-data
+        source: ./.data/postgres-data
         target: /var/lib/postgresql/data
       - type: bind
-        source: /launchpad/services/data/postgres/init-db.sql
+        source: ./services/data/postgres/init-db.sql
         target: /docker-entrypoint-initdb.d/init.sql
 
   kratos-migrate:
@@ -19,8 +22,11 @@ services:
       - LOG_LEVEL=info
     volumes:
       - type: bind
-        source: /launchpad/services/auth/kratos
+        source: ./services/auth/kratos
         target: /etc/config/kratos
+      - type: bind
+        source: ./services/auth/kratos/production.yml
+        target: /etc/config/kratos/kratos.yml
 
   kratos:
     command: serve -c /etc/config/kratos/kratos.yml
@@ -31,30 +37,43 @@ services:
       - SERVE_PUBLIC_BASE_URL=${WEBSITE_URL}/.ory/kratos/public/
     volumes:
       - type: bind
-        source: /launchpad/services/auth/kratos
+        source: ./services/auth/kratos
         target: /etc/config/kratos
+      - type: bind
+        source: ./services/auth/kratos/production.yml
+        target: /etc/config/kratos/kratos.yml
 
   oathkeeper:
     environment:
       - LOG_LEVEL=info
     volumes:
-      - type: bind
-        source: /launchpad/services/auth/oathkeeper
-        target: /etc/config/oathkeeper
+    - type: bind
+      source: ./services/auth/oathkeeper
+      target: /etc/config/oathkeeper
+    - type: bind
+      source: ./services/auth/oathkeeper/production.yml
+      target: /etc/config/oathkeeper/oathkeeper.yml
 
   web:
     image: ghcr.io/cbzehner/launchpad/web:latest
-    command: /bin/bash -c "envsubst < /etc/nginx/conf.d/site.template > /etc/nginx/conf.d/default.conf && exec nginx -g 'daemon off;'"
+    build:
+      context: ./services/web/
+      dockerfile: Dockerfile.prod
+      args:
+        REACT_APP_KRATOS_BROWSER_URL: ${WEB_KRATOS_BROWSER_URL}
     environment:
       - WEBSITE_URL
-      - KRATOS_BROWSER_URL=${WEBSITE_URL}/.ory/kratos/public
-      - REACT_APP_KRATOS_BROWSER_URL=${KRATOS_BROWSER_URL}
+      - KRATOS_BROWSER_URL=WEB_KRATOS_BROWSER_URL
+      - REACT_APP_KRATOS_BROWSER_URL=${WEB_KRATOS_BROWSER_URL}
       - PORT=4435
       - JWKS_URL=WEB_JWKS_URL
       - SECURITY_MODE=jwks
 
   api:
     image: ghcr.io/cbzehner/launchpad/api:latest
+    build:
+      context: ./services/api/
+      dockerfile: Dockerfile.prod
     environment:
       - KRATOS_URL=http://kratos:4433
       - POSTGRES_URL=postgres://api:${API_POSTGRES_PASSWORD}@postgres-database:5432/api

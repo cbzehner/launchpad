@@ -82,8 +82,9 @@ setup_colors
 
 ## Start deploy-machine.sh logic ##
 
+## apt-update && apt-upgrade
 ## Verify dotenv file has been sourced properly (or ENV are otherwise set)
-## Verify docker (for docker-compose) & docker-machine are installed
+## install docker-compose from https://docs.docker.com/compose/install/
 
 ## Verify launchpad is active/set launchpad as active
 docker-machine status launchpad # should output "Running"
@@ -107,8 +108,13 @@ docker-machine ssh launchpad mkdir -p /launchpad/postgres-data
 docker-machine ssh launchpad mkdir -p /launchpad/services/data/postgres
 docker-machine scp ./services/data/postgres/init-db.sql launchpad:/launchpad/services/data/postgres/init-db.sql --delta
 
+# Sync docker-compose files
+docker-machine ssh launchpad mkdir -p /launchpad/infrastructure/docker
+docker-machine scp ./infrastructure/docker/docker-compose.base.yaml launchpad:/launchpad/infrastructure/docker/docker-compose.base.yaml --delta
+docker-machine scp ./infrastructure/docker/docker-compose.production.yaml launchpad:/launchpad/infrastructure/docker/docker-compose.production.yaml --delta
+
 ## Run docker-compose
-just deploy
+docker-machine ssh launchpad docker-compose --file ./infrastructure/docker/docker-compose.base.yaml --file ./infrastructure/docker/docker-compose.production.yaml --project-dir . up --remove-orphans --detach
 
 # TODO: Handle error `failed to create endpoint angry_keldysh on network bridge: adding interface veth6fd0dc1 to bridge docker0 failed: could not find bridge docker0: route ip+net: no such network interface`
 # docker-machine ssh launchpad systemctl restart docker

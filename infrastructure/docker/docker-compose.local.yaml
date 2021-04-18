@@ -16,33 +16,43 @@ services:
 
   kratos-migrate:
     env_file:
-      - ./services/auth/kratos/local/env.local
+      - ./services/auth/kratos/env.local
     volumes:
       - type: bind
-        source: ./services/auth/kratos/local
+        source: ./services/auth/kratos
         target: /etc/config/kratos
+      - type: bind
+        source: ./services/auth/kratos/local.yml
+        target: /etc/config/kratos/kratos.yml
 
   kratos:
     command: serve -c /etc/config/kratos/kratos.yml --dev
     env_file:
-      - ./services/auth/kratos/local/env.local
+      - ./services/auth/kratos/env.local
     ports:
       - "4433:4433" # public
       - "4434:4434" # admin
     volumes:
       - type: bind
-        source: ./services/auth/kratos/local
+        source: ./services/auth/kratos
         target: /etc/config/kratos
+      - type: bind
+        source: ./services/auth/kratos/local.yml
+        target: /etc/config/kratos/kratos.yml
 
   oathkeeper:
     env_file:
-      - ./services/auth/oathkeeper/local/env.local
+      - ./services/auth/oathkeeper/env.local
     volumes:
       - type: bind
-        source: ./services/auth/oathkeeper/local
+        source: ./services/auth/oathkeeper
         target: /etc/config/oathkeeper
+      - type: bind
+        source: ./services/auth/oathkeeper/local.yml
+        target: /etc/config/oathkeeper/oathkeeper.yml
 
   web:
+    image: ghcr.io/cbzehner/launchpad/web:latest
     build:
       context: ./services/web/
       dockerfile: Dockerfile.dev
@@ -52,6 +62,7 @@ services:
       - "4435:4435"
 
   api:
+    image: ghcr.io/cbzehner/launchpad/api:latest
     build:
       context: ./services/api/
       dockerfile: Dockerfile.dev

@@ -13,16 +13,25 @@ launch:
   @for i in $(seq 10 -1 1); do echo 'T-Minus: '$i'...' && sleep 1; done
   @echo 'Liftoff!'
   @cat .rocket.txt
-  docker-compose --file ./infrastructure/docker/docker-compose.base.yaml --file ./infrastructure/docker/docker-compose.local.yaml --project-dir . up --remove-orphans --build
+  docker-compose --file ./infrastructure/docker/docker-compose.base.yaml --file ./infrastructure/docker/docker-compose.local.yaml --project-dir . up --build --remove-orphans
 
+# Deploy project to production
 deploy:
   # sh ./infrastructure/deployment/deploy-machine.sh
-  docker-compose --file ./infrastructure/docker/docker-compose.base.yaml --file ./infrastructure/docker/docker-compose.production.yaml --project-dir . up --remove-orphans
+
+# Run the production configuration on your local machine
+production:
+  docker-compose --file ./infrastructure/docker/docker-compose.base.yaml --file ./infrastructure/docker/docker-compose.production.yaml --project-dir . up --build --remove-orphans
+
+# Tail the production logs
+logs:
+  docker-machine ssh launchpad "docker-compose --file /launchpad/infrastructure/docker/docker-compose.base.yaml --file /launchpad/infrastructure/docker/docker-compose.production.yaml --project-dir /launchpad logs --follow"
 
 # Take down all running launchpad services, including database volumes
 crash:
   @echo 'Blast that piece of junk out of the sky!'
   docker-compose --file ./infrastructure/docker/docker-compose.base.yaml --file ./infrastructure/docker/docker-compose.local.yaml --project-dir . down
+  docker-compose --file ./infrastructure/docker/docker-compose.base.yaml --file ./infrastructure/docker/docker-compose.production.yaml --project-dir . down
 
 # Open the local version of the app
 app:
