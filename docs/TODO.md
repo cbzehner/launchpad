@@ -39,10 +39,12 @@
 1. ~Deploy an unhardened "production" instance~
 1. Harden production instance.
 1. Periodically [rebuild without caching](https://pythonspeed.com/articles/docker-cache-insecure-images/).
+1. Go through the [OWASP Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Docker_Security_Cheat_Sheet.html)
 
 #### ci/cd
 1. ~Set up GitHub actions to run tests for each service, the api and the web client.~
 1. Set up GitHub Action to deploy green builds to production via a [DO Container Registry](https://docs.digitalocean.com/products/kubernetes/how-to/deploy-using-github-actions/)
+1. Set up Watchtower to automatically restart containers.
 
 ## web
 1. ~~Use dotenv instead of hard-coded secret values.~~
