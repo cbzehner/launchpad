@@ -9,7 +9,7 @@ default:
 
 # Run the production configuration on your local machine
 repro:
-  docker-compose --file ./infrastructure/docker/docker-compose.base.yaml --file ./infrastructure/docker/docker-compose.production.yaml --project-dir . up --build --remove-orphans
+  docker-compose --file ./infrastructure/docker/docker-compose.base.yaml --file ./infrastructure/docker/docker-compose.production.yaml --project-dir ../../ up --build --remove-orphans
 
 # Deploy project to production
 deploy:
@@ -20,8 +20,10 @@ launch:
   @echo 'Main engine starting...'
   @for i in $(seq 10 -1 1); do echo 'T-Minus: '$i'...' && sleep 1; done
   @echo 'Liftoff!'
-  @cat .rocket.txt
-  docker-compose --file ./infrastructure/docker/docker-compose.base.yaml --file ./infrastructure/docker/docker-compose.production.yaml --project-dir . up  --detach --remove-orphans
+  @cat ../../.rocket.txt
+  git pull origin master
+  docker-compose --file ./infrastructure/docker/docker-compose.base.yaml --file ./infrastructure/docker/docker-compose.production.yaml --project-dir ../../ up  --detach --remove-orphans
+  docker-compose --file ./infrastructure/docker/docker-compose.base.yaml --file ./infrastructure/docker/docker-compose.production.yaml --project-dir ../../ up  --detach --remove-orphans
 
 # Tail the production logs
 logs:
@@ -30,4 +32,4 @@ logs:
 # Take down all running launchpad services, including database volumes
 crash:
   @echo 'Blast that piece of junk out of the sky!'
-  docker-compose --file ./infrastructure/docker/docker-compose.base.yaml --file ./infrastructure/docker/docker-compose.production.yaml --project-dir . down
+  docker-compose --file ./infrastructure/docker/docker-compose.base.yaml --file ./infrastructure/docker/docker-compose.production.yaml --project-dir ../../ down
