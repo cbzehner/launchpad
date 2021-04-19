@@ -1,0 +1,33 @@
+# Local Variables:
+# mode: makefile
+# End:
+# vim: set ft=make :
+
+# List available recipes
+default:
+  @just --list
+
+# Run the production configuration on your local machine
+repro:
+  docker-compose --file ./infrastructure/docker/docker-compose.base.yaml --file ./infrastructure/docker/docker-compose.production.yaml --project-dir . up --build --remove-orphans
+
+# Deploy project to production
+deploy:
+  # sh ./infrastructure/deployment/deploy-machine.sh
+
+# Run the production configuration
+launch:
+  @echo 'Main engine starting...'
+  @for i in $(seq 10 -1 1); do echo 'T-Minus: '$i'...' && sleep 1; done
+  @echo 'Liftoff!'
+  @cat .rocket.txt
+  docker-compose --file ./infrastructure/docker/docker-compose.base.yaml --file ./infrastructure/docker/docker-compose.production.yaml --project-dir . up  --detach --remove-orphans
+
+# Tail the production logs
+logs:
+  docker-machine ssh launchpad "docker-compose --file /launchpad/infrastructure/docker/docker-compose.base.yaml --file /launchpad/infrastructure/docker/docker-compose.production.yaml --project-dir /launchpad logs --follow"
+
+# Take down all running launchpad services, including database volumes
+crash:
+  @echo 'Blast that piece of junk out of the sky!'
+  docker-compose --file ./infrastructure/docker/docker-compose.base.yaml --file ./infrastructure/docker/docker-compose.production.yaml --project-dir . down
