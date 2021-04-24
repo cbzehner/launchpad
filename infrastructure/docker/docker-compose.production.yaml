@@ -68,3 +68,14 @@ services:
       - ROCKET_LOG_LEVEL=normal
       - ROCKET_PORT=4438
       - ROCKET_SECRET_KEY=IkdKUejNsfs1qluIVEaN/Wp1JbdIuP7uwRGC91m+fUs=
+
+  watchtower:
+    image: containrrr/watchtower
+    command: --interval 300 --cleanup
+    environment:
+      - REPO_USER=DOCKER_REGISTRY_USER_EMAIL_ADDRESS
+      - REPO_PASS=DOCKER_REGISTRY_PERSONAL_ACCESS_TOKEN
+    network_mode: none
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock

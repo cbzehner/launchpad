@@ -43,8 +43,9 @@
 
 #### ci/cd
 1. ~Set up GitHub actions to run tests for each service, the api and the web client.~
-1. Set up GitHub Action to deploy green builds to production via a [DO Container Registry](https://docs.digitalocean.com/products/kubernetes/how-to/deploy-using-github-actions/)
-1. Set up Watchtower to automatically restart containers.
+1. ~~Set up GitHub Action to deploy green builds to production via a [DO Container Registry](https://docs.digitalocean.com/products/kubernetes/how-to/deploy-using-github-actions/)~~ Superceded by Watchtower (see below).
+1. ~~Set up Watchtower to automatically restart containers.~~
+1. Use Watchtower lifecycle hooks and `--rolling-restart` command to enable blue/green deploys.
 
 ## web
 1. ~~Use dotenv instead of hard-coded secret values.~~

@@ -39,6 +39,14 @@ cd launchpad
 # Create a directory to store the database volume
 mkdir -p ./.data/postgres-data
 
+# Note: Superceded by the REPO_USER & REPO_PASS environmental variables passed to the Watchtower container.
+# Authenticate against the container registry. Watchtower will use this credential to automatically restarted updated containers.
+# echo "Setting up GitHub Container Registery (ghcr.io) as your Docker container registry:"
+# read -p "Enter your GitHub email address: " github_email
+# read -s -p "Generate a new Personal Access token (https://github.com/settings/tokens/new). Set the write:packages & delete:packages scopes, then enter your token: " registry_access_token
+# echo ""
+# echo $registry_access_token | docker login ghcr.io -u $github_email --password-stdin
+
 read -p "Create a dotenv file (.env) with the necessary environmental variables. Once that is complete, press any key to continue." unused_user_input
 
 # Start the application
