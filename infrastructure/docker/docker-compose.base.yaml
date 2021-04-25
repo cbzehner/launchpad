@@ -51,6 +51,28 @@ services:
       - 4456:4456
     restart: on-failure
 
+  reverse-proxy:
+    depends_on:
+      oathkeeper:
+        condition: service_started
+    # healthcheck:
+    #   test: ["CMD-SHELL", "curl", "--fail", "http://localhost"]
+    #   interval: 10s
+    #   retries: 5
+    #   start_period: 10s
+    #   timeout: 5s
+    ports:
+      - 80:80
+      - 443:443
+    restart: always
+    volumes:
+      - type: volume
+        source: reverse-proxy-acme-challenge
+        target: /webroot/.well-known/acme-challenge
+      - type: volume
+        source: reverse-proxy-letsencrypt-etc
+        target: /etc/letsencrypt
+
   web:
     depends_on:
       kratos:
@@ -68,3 +90,7 @@ services:
     #   start_period: 10s
     #   timeout: 5s
     restart: on-failure
+
+volumes:
+  reverse-proxy-letsencrypt-etc:
+  reverse-proxy-acme-challenge:

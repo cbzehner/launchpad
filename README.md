@@ -37,7 +37,7 @@ Run `cargo install cargo-chef just watchexec mdkook mdbook-linkcheck` to install
 
 ## Architecture
 
-![diagram](https://user-images.githubusercontent.com/3886290/107551504-34787a80-6b87-11eb-9299-92cebe454176.png)
+<img width="1179" alt="Project architecture diagram showing services and dependencies" src="https://user-images.githubusercontent.com/3886290/116010365-23ff6a00-a5e4-11eb-89ec-258e57ec1b52.png">
 [Edit](https://whimsical.com/launchpad-Y4AZpD16s4S7exbrayWQNZ)
 
 ### Frontend

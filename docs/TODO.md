@@ -19,13 +19,14 @@
 ### auth
 #### ory oathkeeper
 1. Configure TLS on all connections to Oathkeeper
-1. Set up a local domain dev.launchpad.rs redirect to 127.0.0.1:4455
+1. Set up a local domain dev.launchpad.rs redirect to 127.0.0.1
 1. Configure Let's Encrypt with Oathkeeper directly (or throw it all behind Traefik?)
 1. Securely set `id_token.jwks.json` for `services/auth/oathkeeper/production`
 
 ### data
 #### postgres
 1. ~~Store Kratos data in Postgres rather than SQLite.~~
+1. Move the `.data` folder into `services/data/postgres/` as `data/` and remove the `mkdir` step from the `init-machine.sh` script. Or just use a Docker volume rathar than a bind-mount.
 1. Change default password for ROLE `kratos` in `init-db.sql`.
 1. Store Kratos as a schema on the API database rather than an entirely separate database.
 1. Periodically backup the Postgres database to a remote service. [Hint](https://davejansen.com/how-to-set-up-and-use-postgres-using-docker/)
@@ -37,9 +38,11 @@
 1. ~~Create a `deployments/containers/` folder and set up a `just` command for running `docker-compose up --remove-orphans`.~~
 1. Healthchecks for all services.
 1. ~Deploy an unhardened "production" instance~
+1. Use Alpine as the base image for all production containers.
 1. Harden production instance.
 1. Periodically [rebuild without caching](https://pythonspeed.com/articles/docker-cache-insecure-images/).
 1. Go through the [OWASP Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Docker_Security_Cheat_Sheet.html)
+1. Go through `.env.local` and `environment:` keys and make sure everything makes sense and is currently in use.
 
 #### ci/cd
 1. ~Set up GitHub actions to run tests for each service, the api and the web client.~

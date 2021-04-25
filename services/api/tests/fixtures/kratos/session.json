@@ -7,7 +7,7 @@
     "identity": {
         "id": "53354449-9e03-40fc-bc90-fc499e6d44e3",
         "schema_id": "default",
-        "schema_url": "http://127.0.0.1:4455/.ory/kratos/public/schemas/default",
+        "schema_url": "http://127.0.0.1/.ory/kratos/public/schemas/default",
         "traits": {
             "name": {
                 "full": "Christopher Zehner",
