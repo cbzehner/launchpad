@@ -14,6 +14,8 @@ The launchpad template is designed to be production ready from Day One and provi
 The components are modular, empowering you to swap out solutions that don't make sense for your application as it grows.
 
 ## Getting Started
+<details>
+  <summary>Expand for details...</summary>
 
 ### Install Dependencies
 
@@ -34,53 +36,53 @@ This project depends on a few Rust packages
 - `mdbook-linkcheck` is a linter for verifying the mdbook links are valid.
 
 Run `cargo install cargo-chef just watchexec mdkook mdbook-linkcheck` to install the dependencies.
+</details>
+<br/>
 
 ## Architecture
 
 <img width="1179" alt="Project architecture diagram showing services and dependencies" src="https://user-images.githubusercontent.com/3886290/116010365-23ff6a00-a5e4-11eb-89ec-258e57ec1b52.png">
+
 [Edit](https://whimsical.com/launchpad-Y4AZpD16s4S7exbrayWQNZ)
 
 ### Frontend
 
-The frontend consists of three separate components:
-- Auth: The login/sign-up flow and other self-management settings. Interacts with the Auth service.
-- App: The traditional application frontend.
-- Admin: A frontend for internal users and application administrators.
+The front-end is a simple [Create React App](https://create-react-app.dev/) using [Tailwind UI](https://tailwindui.com/).
+
+It's easily swappable for [Vue](https://vuejs.org/), [Svelte](https://svelte.dev/), [Elm](https://elm-lang.org/) or your custom front-end application.
+
+It's built for production and served by a base Nginx container.
 
 ### Backend
 
-The backend consists of a primary API endpoint and secondary services, each of which handles a specific task.
+The backend consists of a series of services, each of which is responsible for a single concern. 
 
-Postgres is used as the primary database.
+#### API
+The primary service is simply named "API" and is a [Rocket](rocket.rs/) service with pre-configured hooks into the authentication service.
+
+#### Authentication
+Authentication is handled by [ORY Kratos](https://www.ory.sh/kratos/), a backend service for managing identities.
+
+#### Database
+Postgres is the primary database. Two different databases are run inside a single Postgres instance, `kratos` for user identity management and `api` for use by the API service.
 
 ### Security
 
-The reverse proxy, [Traefik](https://github.com/traefik/traefik) and/or [ORY Oathkeeper](https://github.com/ory/oathkeeper), will ensure that requests are routed to the appropriate frontend and confirm access against the identity server [ORY Kratos](https://github.com/ory/kratos).
+TLS encryption of public internet traffic is terminated at an Nginx reverse-proxy. All other services communicate via an internal network and do not expose ports to the internet.
 
-Unauthenticated users will be redirected to the `auth` subdomain and after logging in they'll be redirected back to their original destination. If they don't have access (example: a non-admin user attempting to access the `admin` subdomain they will encounter a `404 Not Found` error).
+[ORY Oathkeeper](https://github.com/ory/oathkeeper), provides access control and routing for traffic recieved from the reverse proxy. Oathkeeper will ensure that requests are routed to the appropriate service and confirm access against the identity server [ORY Kratos](https://github.com/ory/kratos).
 
-### Ports
-
-Port   | Service        | Description
------- | ------         |----------
-`4433` | ORY Kratos     | Administrative API endpoints
-`4433` | ORY Kratos     | Public API endpoints
-`4435` | React Web App  | Direct access, prefer going through Oathkeeper
-`4436` | Mailslurper    | ?
-`4437` | Mailslurper    | ?
-`4438` | Backend API    | $
-`4455` | ORY Oathkeeper | Public endpoint for accessing
-`4456` | ORY Oathkeeper | $
-`5432` | Postgres       | $
-
+By default, unauthenticated users ("guests") will be redirected to the `/auth/login` route if attempting to access any other route.
 
 ## Who should use this?
 
-This is currently pre-alpha software and isn't recommended for production use.
+⚠️ This is currently pre-alpha software and isn't recommended for production use by anyone!
 
 ## Contributing
 
-All contributions are welcome! This code is meant for you so feel free to suggest improvements or features! Not all features will be accepted, but the maintainers will strive to handle requests transparently.
+All contributions are welcome! This code is meant for you so feel free to suggest improvements or features!
+
+Not all features will be accepted, but the maintainer(s) will strive to handle requests transparently.
 
 Please open a GitHub issue if you have questions or need to get in touch with the maintainers.
 
