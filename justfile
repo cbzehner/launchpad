@@ -13,12 +13,16 @@ launch:
   @for i in $(seq 10 -1 1); do echo 'T-Minus: '$i'...' && sleep 1; done
   @echo 'Liftoff!'
   @cat .rocket.txt
-  docker-compose --file ./infrastructure/docker/docker-compose.base.yaml --file ./infrastructure/docker/docker-compose.local.yaml --project-dir . up --build --remove-orphans
+  docker-compose up --build --detach --remove-orphans
+
+# Tail the container logs
+logs:
+  docker-compose logs --follow
 
 # Take down all running launchpad services, including database volumes
 crash:
   @echo 'Blast that piece of junk out of the sky!'
-  docker-compose --file ./infrastructure/docker/docker-compose.base.yaml --file ./infrastructure/docker/docker-compose.local.yaml --project-dir . down
+  docker-compose down
 
 # Initialize dependencies
 initialize:
@@ -50,10 +54,10 @@ watch target:
   @echo 'Watching {{target}}...'
   cd services/{{target}} && just watch
 
-# Pass commands to the justfile in infrastructure/deployment
+# Pass commands to the justfile in production
 production command:
   @echo 'Calling production {{command}}...'
-  cd infrastructure/deployment && just {{command}}
+  cd production && just {{command}}
 
 # Open the local version of the app
 app:

@@ -1,6 +1,4 @@
-# Docker
-
-### Ports
+# Ports
 A mapping of ports used internally when running `docker-compose`. Only ports `80` (http) and `443` (https) are exposed publically.
 
 Port   | Service        | Description

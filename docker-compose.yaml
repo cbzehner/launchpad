@@ -1,4 +1,5 @@
 version: "3.7"
+# Base configuration. See https://docs.docker.com/compose/extends/ for details.
 
 services:
   api:
@@ -64,6 +65,7 @@ services:
     restart: on-failure
 
   reverse-proxy:
+    image: nginx:stable
     depends_on:
       oathkeeper:
         condition: service_started
@@ -77,20 +79,9 @@ services:
       - 80:80
       - 443:443
     restart: always
-    volumes:
-      - type: volume
-        source: reverse-proxy-acme-challenge
-        target: /webroot/.well-known/acme-challenge
-      - type: volume
-        source: reverse-proxy-letsencrypt-etc
-        target: /etc/letsencrypt
 
   web:
     depends_on:
       kratos:
         condition: service_started #service_healthy
     restart: on-failure
-
-volumes:
-  reverse-proxy-letsencrypt-etc:
-  reverse-proxy-acme-challenge:

@@ -6,9 +6,11 @@ Use Nginx as a reverse-proxy to provide external connections on ports `80` (http
 
 The first time you set up a new domain, it should be accessible over http immediately. However, secure connections will require slightly more work.
 
-Upon first run, login to the docker container by ssh'ing into the host machine and running `docker exec -it reverse-proxy /bin/bash`. Then run `./register.sh <domain.tld>`
+Make sure the `init-letsencrypt.sh` script has run and created the `./data/certbot` folders.
 
-The setup was inspired by [this guide](https://techsparx.com/software-development/docker/damp/nginx-cron-ssl.html).
+## Local Development
 
-## Let's Encrypt
+Local development currently only supports http traffic.
 
+## Credit
+Setup inspired by [Nginx and Let’s Encrypt with Docker in Less Than 5 Minutes](https://pentacent.medium.com/nginx-and-lets-encrypt-with-docker-in-less-than-5-minutes-b4b8a60d3a71)

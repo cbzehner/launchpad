@@ -1,0 +1,45 @@
+# Local Variables:
+# mode: makefile
+# End:
+# vim: set ft=make :
+
+# List available recipes
+default:
+  @just --list
+
+# Run the production configuration on your local machine
+repro:
+  docker-compose --file ../docker-compose.yaml --file docker-compose.prod.yaml --project-dir ../ up --build --remove-orphans
+
+# Restart a single service
+restart target:
+  @echo 'Restarting {{target}}...'
+  docker-compose --file docker-compose.yaml --file production/docker-compose.prod.yaml --project-dir . restart {{target}}
+
+# Deploy project to production
+deploy:
+  # sh ../deployment/deploy-machine.sh
+
+# Run the production configuration
+launch:
+  @echo 'Confirm your access to the source code'
+  eval $(ssh-agent) && sleep 1
+  ssh-add $HOME/.ssh/github_id_rsa
+  @echo 'Resetting the local environment to match the master branch'
+  git fetch origin master
+  git reset --hard origin/master
+  @echo 'Main engine starting...'
+  @for i in $(seq 10 -1 1); do echo 'T-Minus: '$i'...' && sleep 1; done
+  @echo 'Liftoff!'
+  @cat ../.rocket.txt
+  docker-compose --file ../docker-compose.yaml --file docker-compose.prod.yaml --project-dir ../ pull
+  docker-compose --file ../docker-compose.yaml --file docker-compose.prod.yaml --project-dir ../ up  --detach --remove-orphans
+
+# Tail the production logs
+logs:
+  docker-compose --file ../docker-compose.yaml --file docker-compose.prod.yaml --project-dir ../ logs --follow
+
+# Take down all running launchpad services, including database volumes
+crash:
+  @echo 'Blast that piece of junk out of the sky!'
+  docker-compose --file ../docker-compose.yaml --file docker-compose.prod.yaml --project-dir ../ down
