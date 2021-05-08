@@ -93,8 +93,6 @@ jobs:
           context: services/web
           file: services/web/Dockerfile.prod
           push: ${{ github.event_name != 'pull_request' }}
-          build-args: |
-            REACT_APP_KRATOS_BROWSER_URL=http://launchpad.rs/.ory/kratos/public
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           # TODO: Enable this in the future

@@ -2,7 +2,6 @@ FROM nginx:stable AS nginx
 RUN apt update && apt install -y ca-certificates && update-ca-certificates
 
 FROM node:lts-buster-slim AS builder
-ARG REACT_APP_KRATOS_BROWSER_URL
 WORKDIR /app
 COPY package.json yarn.lock ./
 RUN yarn install --frozen-lockfile

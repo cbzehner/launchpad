@@ -3,13 +3,13 @@ import { Configuration, PublicApi } from "@ory/kratos-client";
 
 import { AuthFlow, FlowType, MethodFlowConfig } from "../types";
 
+export const baseUrl = `${window.location.origin}/.ory/kratos/public`;
+
 // Initialize the requested authentication flow.
 export const initializeAuth = async (
   flowType: FlowType
 ): Promise<AuthFlow | null> => {
-  const authService = new PublicApi(
-    new Configuration({ basePath: process.env.REACT_APP_KRATOS_BROWSER_URL })
-  );
+  const authService = new PublicApi(new Configuration({ basePath: baseUrl }));
 
   // Fetch the flow id set by the Auth service from the browser URL.
   const params = new URLSearchParams(window.location.search);
@@ -36,7 +36,7 @@ export const initializeAuth = async (
 };
 
 export const selfServiceAuthUrl = (flowType: FlowType) =>
-  `${process.env.REACT_APP_KRATOS_BROWSER_URL}/self-service/${flowType}/browser`;
+  `${baseUrl}/self-service/${flowType}/browser`;
 
 // Build the request to the authentication service to fetch the information needed for the specific login flow.
 const requestForFlowType = (

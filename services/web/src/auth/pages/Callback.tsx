@@ -1,6 +1,6 @@
-import process from "process";
 import { useEffect } from "react";
 import { PublicApi, Configuration } from "@ory/kratos-client";
+import { baseUrl as KratosBaseUrl } from "../utils/kratos";
 
 export const LSK_IS_AUTHENTICATED = "kratos.isAuthenticated";
 
@@ -26,7 +26,7 @@ export const unsetAuthenticated = () =>
 
 export default function Callback() {
   const authService = new PublicApi(
-    new Configuration({ basePath: process.env.REACT_APP_KRATOS_BROWSER_URL })
+    new Configuration({ basePath: KratosBaseUrl })
   );
   useEffect(() => {
     authService
