@@ -60,7 +60,13 @@ services:
         target: /docker-entrypoint-initdb.d/init.sql
 
   reverse-proxy:
-    command: "caddy reverse-proxy --to oathkeeper:4455"
+    volumes:
+      - type: bind
+        source: ./services/reverse-proxy/local/Caddyfile
+        target: /etc/caddy/Caddyfile
+      - type: bind
+        source: ./services/reverse-proxy/local/certs
+        target: /etc/local/certs
 
   web:
     image: ghcr.io/cbzehner/launchpad/web:latest

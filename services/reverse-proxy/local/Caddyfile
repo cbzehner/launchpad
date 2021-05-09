@@ -1,0 +1,4 @@
+local.launchpad.rs
+
+reverse_proxy oathkeeper:4455
+tls /etc/local/certs/fullchain.pem /etc/local/certs/privkey.pem

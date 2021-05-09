@@ -24,6 +24,10 @@ crash:
   @echo 'Blast that piece of junk out of the sky!'
   docker-compose down
 
+# Install or renew local TLS certificates
+certs:
+  ./services/reverse-proxy/local/install-local-certs.sh
+
 # Initialize dependencies
 initialize:
   @echo 'Installing web dependencies...'
@@ -61,8 +65,8 @@ production command:
 
 # Open the local version of the app
 app:
-  open http://localhost
+  open http://local.launchpad.rs
 
 # Open the local mail server
 mail:
-  open http://localhost:4436
+  open http://local.launchpad.rs:4436
