@@ -5,13 +5,16 @@ serve:
     base_url: https://launchpad.rs/.ory/kratos/public/
     cors:
       enabled: true
+      allowed_origins:
+        - http://launchpad.rs/
+        - https://launchpad.rs/
   admin:
     base_url: http://kratos:4434/
 
 selfservice:
-  default_browser_return_url: http://launchpad.rs/
+  default_browser_return_url: https://launchpad.rs/
   whitelisted_return_urls:
-    - http://launchpad.rs
+    - https://launchpad.rs
 
   methods:
     password:
@@ -19,33 +22,33 @@ selfservice:
 
   flows:
     error:
-      ui_url: http://launchpad.rs/error
+      ui_url: https://launchpad.rs/error
 
     settings:
-      ui_url: http://launchpad.rs/settings
+      ui_url: https://launchpad.rs/settings
       privileged_session_max_age: 15m
 
     recovery:
       enabled: true
-      ui_url: http://launchpad.rs/auth/recovery
+      ui_url: https://launchpad.rs/auth/recovery
 
     verification:
       enabled: true
-      ui_url: http://launchpad.rs/auth/verify
+      ui_url: https://launchpad.rs/auth/verify
       after:
-        default_browser_return_url: http://launchpad.rs/
+        default_browser_return_url: https://launchpad.rs/
 
     logout:
       after:
-        default_browser_return_url: http://launchpad.rs/auth/login
+        default_browser_return_url: https://launchpad.rs/auth/login
 
     login:
-      ui_url: http://launchpad.rs/auth/login
+      ui_url: https://launchpad.rs/auth/login
       lifespan: 10m
 
     registration:
       lifespan: 10m
-      ui_url: http://launchpad.rs/auth/registration
+      ui_url: https://launchpad.rs/auth/registration
       after:
         password:
           hooks:
@@ -53,6 +56,7 @@ selfservice:
 
 log:
   format: json
+  level: debug
 
 secrets:
   cookie:

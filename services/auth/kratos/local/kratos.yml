@@ -55,8 +55,8 @@ selfservice:
             - hook: session
 
 log:
+  format: json
   level: debug
-  format: text
   leak_sensitive_values: true
 
 secrets:

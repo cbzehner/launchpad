@@ -4,7 +4,7 @@
     url: "http://kratos:4433"
     strip_path: /.ory/kratos/public
   match:
-    url: "http://launchpad.rs/.ory/kratos/public/<**>"
+    url: "https://launchpad.rs/.ory/kratos/public/<**>"
     methods:
       - GET
       - POST
@@ -29,7 +29,7 @@
     preserve_host: true
     url: "http://web:4435"
   match:
-    url: "http://launchpad.rs/<{error,auth/*,**.css,**.js}{/,}>"
+    url: "https://launchpad.rs/<{error,auth/*,**.css,**.js}{/,}>"
     methods:
       - GET
   authenticators:
@@ -44,7 +44,7 @@
     preserve_host: true
     url: "http://web:4435"
   match:
-    url: "http://launchpad.rs/<{,callback,debug,dashboard,settings}>"
+    url: "https://launchpad.rs/<{,callback,debug,dashboard,settings}>"
     methods:
       - GET
   authenticators:
@@ -56,4 +56,4 @@
   errors:
     - handler: redirect
       config:
-        to: http://launchpad.rs/auth/login
+        to: https://launchpad.rs/auth/login

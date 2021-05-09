@@ -1,12 +1,14 @@
 log:
   format: json
+  level: debug
 
 serve:
   proxy:
     cors:
       enabled: true
       allowed_origins:
-        - "*"
+        - http://launchpad.rs/
+        - https://launchpad.rs/
       allowed_methods:
         - POST
         - GET
@@ -19,7 +21,6 @@ serve:
       exposed_headers:
         - Content-Type
       allow_credentials: true
-      debug: true
 
 errors:
   fallback:
@@ -29,7 +30,7 @@ errors:
     redirect:
       enabled: true
       config:
-        to: http://launchpad.rs/auth/login
+        to: https://launchpad.rs/auth/login
         when:
           -
             error:
@@ -79,7 +80,7 @@ mutators:
   id_token:
     enabled: true
     config:
-      issuer_url: http://launchpad.rs/
+      issuer_url: https://launchpad.rs/
       jwks_url: file:///etc/config/oathkeeper/id_token.jwks.json
       claims: |
         {

@@ -10,15 +10,15 @@ services:
     env_file:
       - ./services/api/env.local
     ports:
-      - "4438:4438"
+      - 4438:4438
 
   kratos:
     command: serve -c /etc/config/kratos/kratos.yml --dev
     env_file:
       - ./services/auth/kratos/local/env.local
     ports:
-      - "4433:4433" # public
-      - "4434:4434" # admin
+      - 4433:4433 # public
+      - 4434:4434 # admin
     volumes:
       - type: bind
         source: ./services/auth/kratos/local
@@ -35,12 +35,15 @@ services:
   mailslurper:
     image: oryd/mailslurper:latest-smtps
     ports:
-      - "4436:4436"
-      - "4437:4437"
+      - 4436:4436
+      - 4437:4437
 
   oathkeeper:
     env_file:
       - ./services/auth/oathkeeper/local/env.local
+    ports:
+      - 4455:4455
+      - 4456:4456
     volumes:
       - type: bind
         source: ./services/auth/oathkeeper/local
@@ -50,7 +53,7 @@ services:
     env_file:
       - ./services/data/postgres/env.local
     ports:
-      - "5432:5432"
+      - 5432:5432
     volumes:
       - type: bind
         source: ./.data/postgres-data
@@ -76,4 +79,4 @@ services:
     env_file:
       - ./services/web/env.local
     ports:
-      - "4435:4435"
+      - 4435:4435

@@ -54,10 +54,13 @@ services:
         target: /docker-entrypoint-initdb.d/init.sql
 
   reverse-proxy:
-    command: 
-    depends_on:
-      oathkeeper:
-        condition: service_started
+    volumes:
+      - type: bind
+        source: ./services/reverse-proxy/production/Caddyfile
+        target: /etc/caddy/Caddyfile
+      - type: volume
+        source: caddy_data
+        target: /data
 
   # TODO: Rethink whether this is a good idea. Containers and configs deployed separately is problematic.
   # watchtower:
@@ -73,5 +76,6 @@ services:
 
   web:
     image: ghcr.io/cbzehner/launchpad/web:latest
-    environment:
-      - PORT=4435
+
+volumes:
+  caddy_data:

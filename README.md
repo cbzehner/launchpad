@@ -51,7 +51,7 @@ The front-end is a simple [Create React App](https://create-react-app.dev/) usin
 
 It's easily swappable for [Vue](https://vuejs.org/), [Svelte](https://svelte.dev/), [Elm](https://elm-lang.org/) or your custom front-end application.
 
-It's built for production and served by a base Nginx container.
+It's built for production and served statically via a Docker container.
 
 ### Backend
 
@@ -68,7 +68,7 @@ Postgres is the primary database. Two different databases are run inside a singl
 
 ### Security
 
-TLS encryption of public internet traffic is terminated at an Nginx reverse-proxy. All other services communicate via an internal network and do not expose ports to the internet.
+TLS encryption of public internet traffic is terminated at a reverse-proxy. All other services communicate via an internal network and do not expose ports to the internet.
 
 [ORY Oathkeeper](https://github.com/ory/oathkeeper), provides access control and routing for traffic recieved from the reverse proxy. Oathkeeper will ensure that requests are routed to the appropriate service and confirm access against the identity server [ORY Kratos](https://github.com/ory/kratos).
 

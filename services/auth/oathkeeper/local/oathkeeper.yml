@@ -1,4 +1,5 @@
 log:
+  format: json
   level: debug
 
 serve:

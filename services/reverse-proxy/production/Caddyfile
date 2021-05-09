@@ -1,0 +1,12 @@
+launchpad.rs
+
+reverse_proxy oathkeeper:4455 {
+  transport http {
+    tls_insecure_skip_verify
+  }
+}
+
+log {
+  level debug
+  output stdout
+}
