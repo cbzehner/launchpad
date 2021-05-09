@@ -61,8 +61,8 @@ production command:
 
 # Open the local version of the app
 app:
-  open http://127.0.0.1
+  open http://localhost
 
 # Open the local mail server
 mail:
-  open http://127.0.0.1:4436
+  open http://localhost:4436

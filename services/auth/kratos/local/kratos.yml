@@ -2,16 +2,19 @@ version: v0.5.5-alpha.1
 
 serve:
   public:
-    base_url: http://127.0.0.1:4433/
+    base_url: http://localhost:4433/
     cors:
       enabled: true
+      allowed_origins:
+        - http://localhost/
+        - https://localhost/
   admin:
     base_url: http://kratos:4434/
 
 selfservice:
-  default_browser_return_url: http://127.0.0.1/
+  default_browser_return_url: http://localhost/
   whitelisted_return_urls:
-    - http://127.0.0.1
+    - http://localhost
 
   methods:
     password:
@@ -19,33 +22,33 @@ selfservice:
 
   flows:
     error:
-      ui_url: http://127.0.0.1/error
+      ui_url: http://localhost/error
 
     settings:
-      ui_url: http://127.0.0.1/settings
+      ui_url: http://localhost/settings
       privileged_session_max_age: 15m
 
     recovery:
       enabled: true
-      ui_url: http://127.0.0.1/auth/recovery
+      ui_url: http://localhost/auth/recovery
 
     verification:
       enabled: true
-      ui_url: http://127.0.0.1/auth/verify
+      ui_url: http://localhost/auth/verify
       after:
-        default_browser_return_url: http://127.0.0.1/
+        default_browser_return_url: http://localhost/
 
     logout:
       after:
-        default_browser_return_url: http://127.0.0.1/auth/login
+        default_browser_return_url: http://localhost/auth/login
 
     login:
-      ui_url: http://127.0.0.1/auth/login
+      ui_url: http://localhost/auth/login
       lifespan: 10m
 
     registration:
       lifespan: 10m
-      ui_url: http://127.0.0.1/auth/registration
+      ui_url: http://localhost/auth/registration
       after:
         password:
           hooks:

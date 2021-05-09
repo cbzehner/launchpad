@@ -11,6 +11,12 @@
       - PUT
       - DELETE
       - PATCH
+    allowed_headers:
+      - Authorization
+      - Cookie
+    exposed_headers:
+      - Content-Type
+      - Set-Cookie
   authenticators:
     - handler: noop
   authorizer:

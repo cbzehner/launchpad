@@ -19,7 +19,7 @@
 ### auth
 #### ory oathkeeper
 1. Configure TLS on all connections to Oathkeeper
-1. Set up a local domain dev.launchpad.rs redirect to 127.0.0.1
+1. Set up a local domain dev.launchpad.rs redirect to localhost
 1. Configure Let's Encrypt with Oathkeeper directly (or throw it all behind Traefik?)
 1. Securely set `id_token.jwks.json` for `services/auth/oathkeeper/production`
 

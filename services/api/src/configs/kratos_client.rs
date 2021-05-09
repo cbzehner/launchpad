@@ -17,7 +17,7 @@ impl KratosClient {
 
 impl Default for KratosClient {
     fn default() -> Self {
-        Self(Url::parse("http://127.0.0.1:4433").unwrap())
+        Self(Url::parse("http://localhost:4433").unwrap())
     }
 }
 

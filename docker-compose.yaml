@@ -65,7 +65,7 @@ services:
     restart: on-failure
 
   reverse-proxy:
-    image: nginx:stable
+    image: caddy:2.3.0
     depends_on:
       oathkeeper:
         condition: service_started
